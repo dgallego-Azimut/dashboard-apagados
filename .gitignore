@@ -1,0 +1,17 @@
+# Archivos Excel — NUNCA subirlos al repo (el archivo padre vive en SharePoint)
+*.xlsx
+*.xlsm
+*.xls
+
+# HTMLs generados manualmente (dashboards antiguos)
+Dashboard_Apagados_Azimut*.html
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
