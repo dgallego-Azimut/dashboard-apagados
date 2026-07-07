@@ -374,7 +374,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
       <div class="kc-sub">Sitios en base consolidada</div>
     </div>
     <div class="kc kc-ur">
-      <div class="kc-lbl">UniRed</div>
+      <div class="kc-lbl">MILLICOM</div>
       <div class="kc-val" id="kUr">—</div>
       <div class="kc-sub">Responsabilidad UniRed</div>
       <div class="kc-fin-row">
@@ -455,13 +455,6 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
             <th id="thMes">Consolidado Reciente</th>
           </tr></thead>
           <tbody id="urB"></tbody>
-        </table>
-      </div>
-      <div class="panel">
-        <div class="ptitle">No Cedido</div>
-        <table class="st">
-          <thead><tr><th>UniRed</th><th>Sitios</th><th>Suma Valor No Cedido</th></tr></thead>
-          <tbody id="ncB"></tbody>
         </table>
       </div>
     </div>
@@ -882,30 +875,6 @@ function applyF(){
         <td>${urTot.nic.toLocaleString('es-CO')}</td>
         <td>${cop(urTot.vpm)}</td>
         <td>${cop(urTot.mes)}</td></tr>`;
-
-  /* Tabla No Cedido — sitios con Valor No Cedido > 0 */
-  const ncMap = {};
-  filtered.forEach(r=>{
-    if((r.ValorNoCedido||0) > 0){
-      const k = r.UniRed || '(sin UniRed)';
-      if(!ncMap[k]) ncMap[k] = { unired:k, nic:0, valor:0 };
-      ncMap[k].nic += 1;
-      ncMap[k].valor += r.ValorNoCedido;
-    }
-  });
-  const ncEntries = Object.values(ncMap).sort((a,b)=>b.valor-a.valor);
-  const ncTot = ncEntries.reduce((s,r)=>({nic:s.nic+r.nic, valor:s.valor+r.valor}),{nic:0,valor:0});
-  document.getElementById('ncB').innerHTML =
-    (ncEntries.length
-      ? ncEntries.map(r=>`<tr>
-          <td>${escHtml(r.unired)}</td>
-          <td>${r.nic.toLocaleString('es-CO')}</td>
-          <td>${cop(r.valor)}</td>
-        </tr>`).join('')
-      : '<tr><td colspan="3" style="text-align:center;padding:14px;color:var(--text-dim)">Sin sitios con valor no cedido</td></tr>'
-    ) + (ncEntries.length ? `<tr class="tot"><td>Total</td>
-        <td>${ncTot.nic.toLocaleString('es-CO')}</td>
-        <td>${cop(ncTot.valor)}</td></tr>` : '');
 
   /* Barras por Región */
   const rd = {};
