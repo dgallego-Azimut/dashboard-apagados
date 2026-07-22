@@ -208,6 +208,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 .kc-fin-val{font-size:12px;font-weight:700;color:var(--text);transition:color .3s;}
 .kc-ur .kc-fin-val{color:rgba(245,166,35,.85);}.kc-az .kc-fin-val{color:rgba(0,196,122,.85);}
 
+.kc-detail-btn{
+  margin-top:11px; width:100%;
+  background:rgba(245,166,35,.08); border:1px solid rgba(245,166,35,.4);
+  color:var(--orange); border-radius:7px;
+  padding:6px 10px; font-size:11px; font-weight:700;
+  cursor:pointer; transition:all .15s;
+}
+.kc-detail-btn:hover{background:rgba(245,166,35,.18);border-color:var(--orange);}
+
 /* ═══ FINANCIAL ROW ═══════════════════════════════════════════ */
 .fin-row{display:grid;grid-template-columns:1fr 1fr 1fr 110px;gap:14px;margin-bottom:18px;}
 .fc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:box-shadow .2s;}
@@ -387,6 +396,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
           <div class="kc-fin-val" id="kUrPct">—</div>
         </div>
       </div>
+      <button type="button" class="kc-detail-btn" id="btnMillicomDetail">Ver detalle →</button>
     </div>
     <div class="kc kc-az">
       <div class="kc-lbl">Azimut</div>
@@ -416,7 +426,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     <div class="fc">
       <div class="fc-lbl">Objetivo de Ahorro Mensual</div>
       <div class="fc-val cyan" id="fObjetivo">—</div>
-      <div class="fc-hint">Σ Valor promedio mensual — sitios filtrados</div>
+      <div class="fc-hint">Σ Valor promedio mensual — sitios filtrados (excluye Permanece)</div>
     </div>
     <div class="fc">
       <div class="fc-lbl">Ahorro Logrado Mensual</div>
@@ -448,7 +458,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     </div>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="panel">
-        <div class="ptitle" id="urTitle">Resumen UniRed — Cancelar · Devolver · Permanece</div>
+        <div class="ptitle" id="urTitle">Resumen UniRed — Cancelar · Devolver</div>
         <table class="st">
           <thead><tr>
             <th>UniRed</th><th>Sitios</th><th>Valor Prom. Mensual</th>
@@ -491,6 +501,38 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
 </div>
 </div>
 
+<!-- ═══ HOJA 2 · DETALLE MILLICOM (oculta por defecto) ═══════════ -->
+<div id="millicomView" style="display:none">
+  <header class="hdr">
+    <div class="hdr-top">
+      <img class="hdr-logo" id="dashLogo2" alt="Azimut Energía">
+      <div class="hdr-div"></div>
+      <div>
+        <div class="hdr-t">Detalle · Responsabilidad Millicom</div>
+        <div class="hdr-s">Cuentas no gestionadas por Azimut (excluye Cancelar / Devolver)</div>
+      </div>
+      <div class="hdr-date">Actualizado: <strong id="mDate">—</strong></div>
+      <div class="hdr-actions">
+        <button class="hdr-btn primary" id="btnBackMillicom"><span>←</span> Volver al dashboard</button>
+      </div>
+    </div>
+  </header>
+  <div class="dash">
+    <div class="tw">
+      <div class="ttb">
+        <div class="ttb-t">Resumen dinámico — UniRed × Estado Azimut</div>
+        <div class="ti"><strong id="mCnt">0</strong> sitios</div>
+      </div>
+      <div class="tscroll">
+        <table class="mt">
+          <thead id="mThead"></thead>
+          <tbody id="mB"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ LIBRERÍAS ═════════════════════════════════════════════════ -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
@@ -502,6 +544,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
 const LOGO_B64 = 'data:image/png;base64,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';
 document.getElementById('brandLogo').src  = LOGO_B64;
 document.getElementById('dashLogo').src   = LOGO_B64;
+document.getElementById('dashLogo2').src  = LOGO_B64;
 
 /* ═════════════════════════════════════════════════════════════
    VALIDACIÓN DEL ARCHIVO EXCEL
@@ -811,7 +854,7 @@ function applyF(){
   filtered.forEach(r=>{
     const vpm=r.VPM||0, meses=r.Meses||0;
     const isAz = r.UniRed==='Cancelar' || r.UniRed==='Devolver';
-    objetivo += vpm;
+    if(r.UniRed!=='Permanece') objetivo += vpm;
     if(/ejecutado/i.test(r.Gestion)) logrado += vpm;
     acum += vpm*meses;
     if(isAz){ vpmAz+=vpm; acumAz+=vpm*meses; } else { vpmUr+=vpm; }
@@ -855,7 +898,7 @@ function applyF(){
     urMap[k].mes += r.ConsMes||0;
   });
   const urOrder = ['Cancelar','Devolver','Pendiente Autorizacion Cancelacion','Permanece','No Cedido'];
-  const urEntries = Object.values(urMap).sort((a,b)=>{
+  const urEntries = Object.values(urMap).filter(r=>r.unired!=='Permanece').sort((a,b)=>{
     const ia = urOrder.indexOf(a.unired), ib = urOrder.indexOf(b.unired);
     if(ia===-1 && ib===-1) return a.unired.localeCompare(b.unired);
     if(ia===-1) return 1; if(ib===-1) return -1;
@@ -998,6 +1041,82 @@ document.getElementById('btnReload').addEventListener('click', ()=>{
   document.getElementById('fileInput').value = '';
   clearStatus();
   DATA = []; filtered = [];
+});
+
+/* ── Hoja 2: Detalle Millicom (tabla dinámica UniRed × Estado Azimut) ── */
+function renderMillicomDetail(){
+  const rows = filtered.filter(r => r.UniRed!=='Cancelar' && r.UniRed!=='Devolver');
+  document.getElementById('mCnt').textContent = rows.length.toLocaleString('es-CO');
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const yy = now.getFullYear();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mn = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('mDate').textContent = dd+'/'+mm+'/'+yy+' '+hh+':'+mn;
+
+  /* Filas = UniRed (orden fijo conocido primero), Columnas = Estado Azimut */
+  const urOrderD = ['Pendiente Autorizacion Cancelacion','Permanece','No Cedido','Pendiente Acta desmonte'];
+  const unireds = [...new Set(rows.map(r=> r.UniRed || '(sin UniRed)'))].sort((a,b)=>{
+    const ia = urOrderD.indexOf(a), ib = urOrderD.indexOf(b);
+    if(ia===-1 && ib===-1) return a.localeCompare(b);
+    if(ia===-1) return 1; if(ib===-1) return -1;
+    return ia-ib;
+  });
+  const estados = [...new Set(rows.map(r=> r.Estado_Azimut || '(sin estado)'))].sort();
+
+  const pivot = {};
+  unireds.forEach(u=> pivot[u] = {});
+  rows.forEach(r=>{
+    const u = r.UniRed || '(sin UniRed)';
+    const e = r.Estado_Azimut || '(sin estado)';
+    pivot[u][e] = (pivot[u][e]||0) + 1;
+  });
+
+  /* Encabezado dinámico */
+  document.getElementById('mThead').innerHTML =
+    '<tr><th>UniRed</th>' +
+    estados.map(e=>`<th style="text-align:right">${escHtml(e)}</th>`).join('') +
+    '<th style="text-align:right">Total</th></tr>';
+
+  if(!unireds.length || !estados.length){
+    document.getElementById('mB').innerHTML =
+      `<tr><td colspan="${estados.length+2 || 2}" style="text-align:center;padding:32px;color:var(--text-dim)">Sin resultados para los filtros seleccionados.</td></tr>`;
+    return;
+  }
+
+  /* Filas del cuerpo + acumulación de totales por columna */
+  const colTot = {}; estados.forEach(e=> colTot[e]=0);
+  let grand = 0;
+  const bodyRows = unireds.map(u=>{
+    let rowTot = 0;
+    const cells = estados.map(e=>{
+      const c = pivot[u][e] || 0;
+      rowTot += c; colTot[e] += c;
+      return `<td style="text-align:right;font-family:monospace">${c ? c.toLocaleString('es-CO') : '—'}</td>`;
+    }).join('');
+    grand += rowTot;
+    return `<tr><td>${bUR(u)}</td>${cells}<td style="text-align:right;font-family:monospace;font-weight:700;color:var(--white)">${rowTot.toLocaleString('es-CO')}</td></tr>`;
+  }).join('');
+
+  const totalRow =
+    `<tr class="tot"><td>Total</td>` +
+    estados.map(e=>`<td style="text-align:right;font-family:monospace">${colTot[e].toLocaleString('es-CO')}</td>`).join('') +
+    `<td style="text-align:right;font-family:monospace">${grand.toLocaleString('es-CO')}</td></tr>`;
+
+  document.getElementById('mB').innerHTML = bodyRows + totalRow;
+}
+
+document.getElementById('btnMillicomDetail').addEventListener('click', ()=>{
+  renderMillicomDetail();
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('millicomView').style.display = 'block';
+  window.scrollTo({top:0});
+});
+document.getElementById('btnBackMillicom').addEventListener('click', ()=>{
+  document.getElementById('millicomView').style.display = 'none';
+  document.getElementById('dashboardView').style.display = 'block';
+  window.scrollTo({top:0});
 });
 
 document.getElementById('btnPdf').addEventListener('click', ()=>{
