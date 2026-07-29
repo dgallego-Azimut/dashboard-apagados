@@ -216,6 +216,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
   cursor:pointer; transition:all .15s;
 }
 .kc-detail-btn:hover{background:rgba(245,166,35,.18);border-color:var(--orange);}
+.kc-detail-btn-cyan{background:rgba(0,180,216,.08);border-color:rgba(0,180,216,.4);color:var(--cyan);}
+.kc-detail-btn-cyan:hover{background:rgba(0,180,216,.18);border-color:var(--cyan);}
 
 /* ═══ FINANCIAL ROW ═══════════════════════════════════════════ */
 .fin-row{display:grid;grid-template-columns:1fr 1fr 1fr 110px;gap:14px;margin-bottom:18px;}
@@ -263,6 +265,22 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 .ttb-t{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1.5px;flex:1;}
 .ti{font-size:11px;color:var(--text-dim);}.ti strong{color:var(--cyan);}
 .tscroll{overflow-x:auto;max-height:420px;overflow-y:auto;}
+
+/* ═══ EVOLUCIÓN MENSUAL — GRÁFICO DE BARRAS ═════════════════════ */
+.evo-legend{display:flex;gap:22px;padding:14px 16px 0;font-size:11.5px;color:var(--text-dim);}
+.evo-lg{display:flex;align-items:center;gap:7px;}
+.evo-dot{width:11px;height:11px;border-radius:3px;display:inline-block;}
+.evo-dot-g{background:var(--cyan);}
+.evo-dot-a{background:var(--orange);}
+.evo-chart{display:flex;align-items:flex-end;gap:26px;padding:28px 24px 18px;overflow-x:auto;min-height:340px;}
+.evo-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:64px;height:280px;flex:0 0 auto;}
+.evo-bars{display:flex;align-items:flex-end;gap:5px;height:100%;}
+.evo-bar{width:20px;border-radius:4px 4px 0 0;position:relative;transition:opacity .15s;min-height:2px;}
+.evo-bar:hover{opacity:.8;}
+.evo-bar-g{background:linear-gradient(180deg, var(--cyan), var(--cyan-dark));}
+.evo-bar-a{background:linear-gradient(180deg, var(--orange), #c9800f);}
+.evo-bar-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--text);white-space:nowrap;}
+.evo-month{margin-top:10px;font-size:10.5px;color:var(--text-dim);text-transform:capitalize;white-space:nowrap;}
 table.mt{width:100%;border-collapse:collapse;font-size:12px;}
 table.mt thead tr{background:var(--navy);position:sticky;top:0;z-index:10;}
 table.mt thead th{padding:10px 12px;text-align:left;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);border-bottom:1px solid var(--border);white-space:nowrap;}
@@ -419,6 +437,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
       <div class="kc-frac"><strong id="kAzEjec">0</strong> ejecutados de <strong id="kAzTot">0</strong></div>
       <div class="kc-bar-wrap"><div class="kc-bar-fill" id="barAv" style="width:0%"></div></div>
       <div class="kc-hint">Gestión = Ejecutado ÷ Azimut total</div>
+      <button type="button" class="kc-detail-btn kc-detail-btn-cyan" id="btnEvolucion">Ver evolución →</button>
     </div>
   </div>
 
@@ -533,6 +552,47 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
   </div>
 </div>
 
+<!-- ═══ HOJA 3 · EVOLUCIÓN MENSUAL EJECUTADOS (oculta por defecto) ══ -->
+<div id="evolucionView" style="display:none">
+  <header class="hdr">
+    <div class="hdr-top">
+      <img class="hdr-logo" id="dashLogo3" alt="Azimut Energía">
+      <div class="hdr-div"></div>
+      <div>
+        <div class="hdr-t">Evolución Mensual · Ejecutados</div>
+        <div class="hdr-s">Conteo por mes según Fecha de Gestión</div>
+      </div>
+      <div class="hdr-date">Actualizado: <strong id="eDate">—</strong></div>
+      <div class="hdr-actions">
+        <button class="hdr-btn primary" id="btnBackEvolucion"><span>←</span> Volver al dashboard</button>
+      </div>
+    </div>
+  </header>
+  <div class="dash">
+    <div class="tw">
+      <div class="ttb">
+        <div class="ttb-t">Sitios ejecutados por mes</div>
+        <div class="ti"><strong id="eCnt">0</strong> sitios con Fecha de Gestión</div>
+      </div>
+      <div class="evo-legend">
+        <span class="evo-lg"><span class="evo-dot evo-dot-g"></span> Gestión = Ejecutado</span>
+        <span class="evo-lg"><span class="evo-dot evo-dot-a"></span> Gestión Actas = Ejecutado</span>
+      </div>
+      <div class="evo-chart" id="evoChart"></div>
+    </div>
+
+    <div class="tw" style="margin-top:18px;max-width:420px;">
+      <div class="ttb">
+        <div class="ttb-t">Total global — Ejecutados</div>
+      </div>
+      <table class="st">
+        <thead><tr><th>Columna</th><th>Ejecutados</th></tr></thead>
+        <tbody id="eGlobalB"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ LIBRERÍAS ═════════════════════════════════════════════════ -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
@@ -545,6 +605,7 @@ const LOGO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXEAAACICAMAAAAm
 document.getElementById('brandLogo').src  = LOGO_B64;
 document.getElementById('dashLogo').src   = LOGO_B64;
 document.getElementById('dashLogo2').src  = LOGO_B64;
+document.getElementById('dashLogo3').src  = LOGO_B64;
 
 /* ═════════════════════════════════════════════════════════════
    VALIDACIÓN DEL ARCHIVO EXCEL
@@ -679,6 +740,10 @@ function processWorkbook(wb, fname){
   /* 5. Detectar columna “Valor No cedido” (opcional) */
   const idxNoCedido = headers.findIndex(h => norm(h) === norm('Valor No cedido'));
 
+  /* 5b. Detectar columnas opcionales de evolución mensual */
+  const idxFechaGestion = headers.findIndex(h => norm(h) === norm('Fecha de Gestión'));
+  const idxGestionActas = headers.findIndex(h => norm(h) === norm('Gestión Actas'));
+
   /* 6. Parsear filas → DATA */
   const num = v => {
     if(v==null || v==='' || v===' ') return 0;
@@ -710,7 +775,9 @@ function processWorkbook(wb, fname){
       Meses: num(row[idx['Meses con ahorro']]),
       Acumulado: num(row[idx['Valor Ahorro Acumulado']]),
       Region: str(row[idx['Región']]).toUpperCase(),
-      Responsable: str(row[idx['Responsable de la cuenta']])
+      Responsable: str(row[idx['Responsable de la cuenta']]),
+      FechaGestion: (idxFechaGestion>=0 && row[idxFechaGestion] instanceof Date) ? row[idxFechaGestion] : null,
+      GestionActas: idxGestionActas>=0 ? str(row[idxGestionActas]) : ''
     });
   }
 
@@ -1115,6 +1182,80 @@ document.getElementById('btnMillicomDetail').addEventListener('click', ()=>{
 });
 document.getElementById('btnBackMillicom').addEventListener('click', ()=>{
   document.getElementById('millicomView').style.display = 'none';
+  document.getElementById('dashboardView').style.display = 'block';
+  window.scrollTo({top:0});
+});
+
+/* ── Hoja 3: Evolución mensual de ejecutados (Fecha de Gestión) ──── */
+const MESES_ES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function renderEvolucionMensual(){
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const yy = now.getFullYear();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mn = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('eDate').textContent = dd+'/'+mm+'/'+yy+' '+hh+':'+mn;
+
+  /* Solo sitios con Fecha de Gestión válida */
+  const withDate = filtered.filter(r => r.FechaGestion instanceof Date && !isNaN(r.FechaGestion));
+  document.getElementById('eCnt').textContent = withDate.length.toLocaleString('es-CO');
+
+  const monthMap = {}; // 'YYYY-MM' -> {gestion:0, actas:0}
+  withDate.forEach(r=>{
+    const d = r.FechaGestion;
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    if(!monthMap[key]) monthMap[key] = { gestion:0, actas:0 };
+    if(/ejecutado/i.test(r.Gestion)) monthMap[key].gestion += 1;
+    if(/ejecutado/i.test(r.GestionActas)) monthMap[key].actas += 1;
+  });
+
+  const keys = Object.keys(monthMap).sort();
+  const chart = document.getElementById('evoChart');
+
+  /* Total global de "Ejecutado" por columna — sobre TODOS los sitios filtrados,
+     tengan o no Fecha de Gestión diligenciada */
+  const totGestion = filtered.filter(r => /ejecutado/i.test(r.Gestion)).length;
+  const totActas   = filtered.filter(r => /ejecutado/i.test(r.GestionActas)).length;
+  const totAzimut  = filtered.filter(r => r.UniRed==='Cancelar' || r.UniRed==='Devolver').length;
+  document.getElementById('eGlobalB').innerHTML = `
+    <tr><td>Gestión</td><td>${totGestion.toLocaleString('es-CO')}</td></tr>
+    <tr><td>Gestión Actas</td><td>${totActas.toLocaleString('es-CO')}</td></tr>
+    <tr class="tot"><td>Sitios en gestión Azimut</td><td>${totAzimut.toLocaleString('es-CO')}</td></tr>
+  `;
+
+  if(!keys.length){
+    chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No hay sitios con Fecha de Gestión para los filtros seleccionados.</div>';
+    return;
+  }
+
+  const maxVal = Math.max(1, ...keys.map(k => Math.max(monthMap[k].gestion, monthMap[k].actas)));
+  const MAX_PX = 220;
+
+  chart.innerHTML = keys.map(k=>{
+    const [y,m] = k.split('-');
+    const label = MESES_ES[parseInt(m,10)-1] + ' ' + y;
+    const g = monthMap[k].gestion, a = monthMap[k].actas;
+    const hg = Math.max(2, Math.round((g/maxVal) * MAX_PX));
+    const ha = Math.max(2, Math.round((a/maxVal) * MAX_PX));
+    return `<div class="evo-col">
+      <div class="evo-bars">
+        <div class="evo-bar evo-bar-g" style="height:${hg}px"><span class="evo-bar-val">${g}</span></div>
+        <div class="evo-bar evo-bar-a" style="height:${ha}px"><span class="evo-bar-val">${a}</span></div>
+      </div>
+      <div class="evo-month">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('btnEvolucion').addEventListener('click', ()=>{
+  renderEvolucionMensual();
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('evolucionView').style.display = 'block';
+  window.scrollTo({top:0});
+});
+document.getElementById('btnBackEvolucion').addEventListener('click', ()=>{
+  document.getElementById('evolucionView').style.display = 'none';
   document.getElementById('dashboardView').style.display = 'block';
   window.scrollTo({top:0});
 });
