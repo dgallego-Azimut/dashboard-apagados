@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Azimut Energía · Dashboard Consolidado Apagados</title>
-<link rel="preconnect" href="https://cdn.sheetjs.com">
-
 <style>
 :root{
   --bg:#0D1B2A; --navy:#0A1E3D; --blue:#1A3A6B;
@@ -320,12 +318,184 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
   .hdr-actions,.hdr-filters,.fsrch,.pg-wrap{display:none !important;}
   .tscroll{max-height:none;overflow:visible;}
 }
-.pdf-mode .hdr-actions,.pdf-mode .fsrch,.pdf-mode .pg-wrap{visibility:hidden;}
+
+
+/* ═══ V2 · PESTAÑAS ═══════════════════════════════════════════ */
+.tabs{display:flex;gap:4px;padding:0 28px;overflow-x:auto;border-top:1px solid rgba(255,255,255,.05);scrollbar-width:thin;}
+.tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-dim);padding:10px 14px;font-size:11.5px;font-weight:700;letter-spacing:.4px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.tab:hover{color:var(--text);}
+.tab.on{color:var(--cyan);border-bottom-color:var(--cyan);}
+.tab-pane{display:none;}
+.tab-pane.on{display:block;animation:fadeIn .2s ease;}
+.hdr-filters{padding-top:10px;}
+.fchip{font-size:10.5px;color:var(--text-dim);margin-left:6px;}
+.fchip strong{color:var(--cyan);}
+
+/* ═══ V2 · GRIDS ══════════════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+.panel-note{padding:8px 14px 12px;font-size:10px;color:rgba(107,126,150,.8);font-style:italic;line-height:1.5;}
+.ptitle .ptools{float:right;display:flex;gap:4px;margin-top:-3px;}
+.ptitle .ptools button{background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:12px;padding:2px 9px;font-size:9.5px;font-weight:700;cursor:pointer;letter-spacing:.5px;}
+.ptitle .ptools button.on{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-glow);}
+.pscroll{overflow:auto;max-height:420px;}
+
+/* mini KPI */
+.mk-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px;}
+.mk{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.mk-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-dim);margin-bottom:6px;}
+.mk-val{font-size:26px;font-weight:800;color:var(--white);line-height:1.1;}
+.mk-sub{font-size:10.5px;color:var(--text-dim);margin-top:4px;}
+
+/* barras horizontales genéricas */
+.hb{padding:12px 14px 6px;}
+.hbr{display:grid;grid-template-columns:minmax(90px,38%) 1fr 74px;align-items:center;gap:10px;margin-bottom:7px;cursor:default;}
+.hbr.click{cursor:pointer;}
+.hbr.click:hover .hbl{color:var(--cyan);}
+.hbl{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hbt{height:12px;background:rgba(255,255,255,.05);border-radius:0 4px 4px 0;overflow:hidden;display:flex;gap:2px;}
+.hbt > div{height:100%;}
+.hbt > div:last-child{border-radius:0 4px 4px 0;}
+.seg-az{background:var(--green);}
+.seg-ur{background:var(--cyan);}
+.seg-one{background:var(--cyan);}
+.hbc{font-size:11px;color:var(--white);text-align:right;font-family:monospace;white-space:nowrap;}
+.hbc small{color:var(--text-dim);font-size:9.5px;margin-left:3px;}
+.legend{padding:0 14px 12px;display:flex;gap:14px;font-size:10.5px;color:var(--text-dim);flex-wrap:wrap;}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+/* pivot */
+table.pv{width:100%;border-collapse:collapse;font-size:11.5px;}
+table.pv th{padding:8px 10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--cyan);border-bottom:1px solid var(--border);background:rgba(0,0,0,.12);text-align:right;white-space:nowrap;position:sticky;top:0;}
+table.pv th:first-child{text-align:left;}
+table.pv td{padding:7px 10px;border-bottom:1px solid rgba(30,51,84,.5);text-align:right;font-family:monospace;font-size:11px;white-space:nowrap;}
+table.pv td:first-child{text-align:left;font-family:inherit;font-size:11.5px;}
+table.pv tr.tot td{font-weight:700;color:var(--white);background:rgba(0,180,216,.07);border-top:1px solid var(--border);}
+table.pv td.rt{font-weight:700;color:var(--white);}
+table.pv tr:hover:not(.tot) td{background:rgba(0,180,216,.04);}
+.heat{position:relative;}
+
+/* tabla ordenable */
+table.mt thead th.sort{cursor:pointer;user-select:none;}
+table.mt thead th.sort:hover{color:var(--white);}
+table.mt thead th .arr{opacity:.5;margin-left:4px;font-size:9px;}
+table.mt thead th.sorted .arr{opacity:1;}
+table.mt tbody tr.click{cursor:pointer;}
+table.mt td.num{text-align:right;font-family:monospace;font-size:11px;}
+table.mt th.num{text-align:right;}
+.avb{display:flex;align-items:center;gap:8px;min-width:120px;}
+.avb .t{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.avb .f{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));}
+.avb span{font-family:monospace;font-size:10.5px;width:42px;text-align:right;color:var(--white);}
+
+/* gráfico de columnas apiladas (facturación) */
+.col-chart{display:flex;align-items:flex-end;gap:22px;padding:34px 24px 14px;overflow-x:auto;min-height:330px;}
+.cc-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:280px;min-width:70px;flex:1 0 70px;max-width:120px;}
+.cc-stack{display:flex;flex-direction:column-reverse;gap:2px;width:44px;position:relative;}
+.cc-stack > div{width:100%;}
+.cc-stack > div:last-child{border-radius:4px 4px 0 0;}
+.cc-top{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;font-size:10.5px;font-weight:700;color:var(--text);white-space:nowrap;}
+.cc-lbl{margin-top:10px;font-size:10.5px;color:var(--text-dim);text-transform:capitalize;white-space:nowrap;}
+.cc-hit{cursor:default;}
+.delta-up{color:var(--red);}
+.delta-dn{color:var(--green);}
+
+/* tooltip */
+#tip{position:fixed;z-index:999;pointer-events:none;background:#06121f;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);display:none;max-width:280px;line-height:1.5;}
+#tip b{color:var(--white);}
+
+/* drawer ficha del sitio */
+.drw-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;}
+.drw{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:var(--navy);border-left:2px solid var(--cyan);z-index:301;display:none;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.4);}
+.drw.on,.drw-bg.on{display:flex;}
+.drw-h{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;}
+.drw-h .t{font-size:15px;font-weight:800;color:var(--white);}
+.drw-h .s{font-size:11px;color:var(--cyan);margin-top:3px;}
+.drw-h button{margin-left:auto;background:transparent;border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;}
+.drw-h button:hover{border-color:var(--cyan);color:var(--cyan);}
+.drw-srch{margin:10px 18px 0;background:rgba(0,0,0,.2);border:1px solid var(--border);color:var(--white);border-radius:6px;padding:6px 10px;font-size:11.5px;outline:none;}
+.drw-b{overflow-y:auto;padding:8px 18px 24px;flex:1;}
+.drw-sec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin:16px 0 6px;}
+.kv{display:grid;grid-template-columns:44% 1fr;gap:10px;padding:6px 0;border-bottom:1px solid rgba(30,51,84,.5);font-size:11.5px;}
+.kv .k{color:var(--text-dim);}
+.kv .v{color:var(--white);word-break:break-word;}
+.drw-empty{font-size:10.5px;color:var(--text-dim);margin-top:14px;font-style:italic;}
+
+@media(max-width:1200px){.mk-row{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}.mk-row{grid-template-columns:1fr 1fr}.tabs{padding:0 14px}.hdr-top{padding:0 14px;}.hdr-filters{padding:10px 14px}.fsrch{margin-left:0;width:100%}.hdr-date{display:none}}
+@media(max-width:600px){.kpi-row,.fin-row{grid-template-columns:1fr}.hdr-s{display:none}.kc-val{font-size:32px}}
+
+/* ajustes finales */
+.fsel{max-width:240px;}
+.btm-grid{grid-template-columns:250px 1fr 340px;}
+.col-chart{justify-content:space-around;}
+@media(max-width:1100px){.btm-grid{grid-template-columns:1fr 1fr}.btm-grid > .panel:first-child{grid-column:1 / -1}}
+@media(max-width:900px){
+  .btm-grid{grid-template-columns:1fr}
+  .hdr{position:static;}
+  .hdr-top{height:auto;flex-wrap:wrap;padding:10px 14px;gap:10px;}
+  .hdr-div{display:none;}
+  .hdr-actions{margin-left:0;width:100%;flex-wrap:wrap;}
+  .fsel{max-width:100%;width:100%;}
+  .slr-sep{display:none;}
+  .slr-lbl{width:100%;margin-top:4px;}
+  .tscroll,.pscroll{max-width:100%;}
+  .tw,.panel{max-width:100%;}
+}
+
+/* ═══ TEMA CLARO / OSCURO ═════════════════════════════════════ */
+:root{
+  color-scheme:dark;
+  --track:rgba(255,255,255,.06); --line:rgba(255,255,255,.06);
+  --input-bg:rgba(0,0,0,.2); --tip-bg:#06121f; --drop-bg:rgba(15,37,64,.6);
+  --on-accent:#001a24; --title:#FFFFFF; --err:#ff8a8a;
+  --badge-g:#00C47A; --badge-t:#6AABF7; --fin-ur:rgba(245,166,35,.85); --fin-az:rgba(0,196,122,.85);
+}
+:root[data-az="light"]{
+  color-scheme:light;
+  --bg:#EEF3F8; --navy:#FFFFFF; --blue:#DCEBF7;
+  --cyan:#0A7FC2; --cyan-dark:#086AA3; --cyan-glow:rgba(10,127,194,.10);
+  --white:#0A1E3D; --card:#FFFFFF; --border:#D3DDE8;
+  --text:#22364F; --text-dim:#5E7089;
+  --green:#00A36C; --orange:#C27400; --red:#C83232;
+  --tr:#FFFFFF; --ta:#F5F8FB;
+  --track:rgba(10,30,61,.07); --line:rgba(10,30,61,.08);
+  --input-bg:#F4F7FA; --tip-bg:#FFFFFF; --drop-bg:#FFFFFF;
+  --on-accent:#FFFFFF; --title:#0A1E3D; --err:#B42318;
+  --badge-g:#00804F; --badge-t:#1F5FAF; --fin-ur:#A86400; --fin-az:#00804F;
+}
+html,body{background:var(--bg);color:var(--text);}
+.hdr-logo{background:#FFFFFF;}
+:root[data-az="light"] .hdr-logo,:root[data-az="light"] .upload-brand img{box-shadow:0 0 0 1px var(--border);}
+.upload-brand .b-title,.dropzone h2{color:var(--title);}
+.dropzone{background:var(--drop-bg);}
+.dropzone .pick-btn,.hdr-btn.primary,.hdr-btn.primary:hover{color:var(--on-accent);}
+.status-msg.error{color:var(--err);}
+.hdr-filters,.tabs{border-top-color:var(--line);}
+.kc-bar-wrap,.pm-bar,.hbt,.avb .t{background:var(--track);}
+.kc-fin-row{border-top-color:var(--line);}
+.bc{color:var(--badge-g);}
+.bt{color:var(--badge-t);}
+.kc-ur .kc-fin-val{color:var(--fin-ur);}
+.kc-az .kc-fin-val{color:var(--fin-az);}
+.fsel,.fsrch,.drw-srch{background:var(--input-bg);}
+#tip{background:var(--tip-bg);}
+.hdr{top:env(safe-area-inset-top,0px);}
+:root[data-az="light"] .hdr{box-shadow:0 2px 14px rgba(10,30,61,.08);}
+:root[data-az="light"] .kc:hover{box-shadow:0 8px 24px rgba(10,30,61,.10);}
+.theme-btn{min-width:86px;justify-content:center;}
+.upload-theme{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));right:max(16px, env(safe-area-inset-right,0px));z-index:5;}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--cyan);border-radius:8px;padding:10px 16px;font-size:12px;z-index:400;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:calc(100vw - 32px);display:none;}
+.toast.on{display:block;animation:fadeIn .2s ease;}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+
 </style>
 </head>
 <body>
 
 <!-- ═══ VISTA DE CARGA ═══════════════════════════════════════════ -->
+<button type="button" class="hdr-btn theme-btn upload-theme" id="btnTheme0" title="Cambiar entre tema claro y oscuro">☀ Claro</button>
 <div id="uploadView" class="upload-view">
   <div class="upload-brand">
     <img id="brandLogo" alt="Azimut">
@@ -342,8 +512,8 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     <button type="button" class="pick-btn" id="pickBtn">Seleccionar archivo</button>
     <input type="file" id="fileInput" accept=".xlsx,.xlsm,.xls" style="display:none">
     <div class="fmt-note">
-      Archivo esperado: <strong>Consolidado Apagados.xlsx</strong><br>
-      Debe contener la hoja <strong>“Consolidado Apagados”</strong> con la estructura de columnas oficial.
+      Archivo esperado: <strong>Consolidado Apagados.xlsx</strong> (V2 o posterior)<br>
+      Solo se lee la hoja <strong>“Consolidado Apagados”</strong>; las demás hojas del libro se ignoran.
     </div>
   </div>
 
@@ -357,25 +527,23 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
   </div>
 </div>
 
-<!-- ═══ DASHBOARD (oculto hasta cargar Excel) ═══════════════════ -->
+<!-- ═══ DASHBOARD ═══════════════════════════════════════════════ -->
 <div id="dashboardView" style="display:none">
 
-<header class="hdr" id="captureRoot">
+<header class="hdr">
   <div class="hdr-top">
     <img class="hdr-logo" id="dashLogo" alt="Azimut Energía">
     <div class="hdr-div"></div>
     <div>
       <div class="hdr-t">Dashboard · Consolidado Apagados</div>
-      <div class="hdr-s">Seguimiento de sitios y ahorro energético</div>
+      <div class="hdr-s" id="hdrSub">Seguimiento de sitios y ahorro energético</div>
     </div>
-    <div class="hdr-date">Actualizado: <strong id="dashDate">—</strong></div>
+    <div class="hdr-date">Archivo: <strong id="dashFile">—</strong><br>Cargado: <strong id="dashDate">—</strong></div>
     <div class="hdr-actions">
-      <button class="hdr-btn primary" id="btnPdf" title="Descargar dashboard como PDF">
-        <span>⬇</span> PDF
-      </button>
-      <button class="hdr-btn" id="btnReload" title="Cargar otro archivo">
-        <span>↺</span> Cambiar Excel
-      </button>
+      <button class="hdr-btn" id="btnXlsx" title="Descargar las filas filtradas en Excel"><span>⬇</span> Excel filtrado</button>
+      <button class="hdr-btn primary" id="btnPdf" title="Descargar la pestaña actual como PDF"><span>⬇</span> PDF</button>
+      <button class="hdr-btn" id="btnReload" title="Cargar otro archivo"><span>↺</span> Cambiar Excel</button>
+      <button class="hdr-btn theme-btn" id="btnTheme" title="Cambiar entre tema claro y oscuro">☀ Claro</button>
     </div>
   </div>
 
@@ -386,14 +554,35 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     <span class="slr-lbl">Operador</span>
     <div id="fOpGroup" style="display:contents"></div>
     <div class="slr-sep"></div>
+    <span class="slr-lbl">Seguimiento</span>
+    <div id="fSegGroup" style="display:contents"></div>
+  </div>
+  <div class="hdr-filters">
     <select class="fsel" id="fReg"></select>
     <select class="fsel" id="fUr"></select>
-    <input class="fsrch" id="fSrch" type="text" placeholder="🔍  Buscar sitio / NIC…">
+    <select class="fsel" id="fEa"></select>
+    <select class="fsel" id="fTw"></select>
+    <select class="fsel" id="fCom"></select>
+    <button class="pg" id="btnClear">↺ Limpiar filtros</button>
+    <span class="fchip"><strong id="fCount">0</strong> sitios con los filtros actuales</span>
+    <input class="fsrch" id="fSrch" type="text" placeholder="🔍  Buscar sitio / NIC / nombre…">
   </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-tab="resumen">Resumen</button>
+    <button class="tab" data-tab="desmonte">Desmonte y gestión</button>
+    <button class="tab" data-tab="comercial">Comercializadores</button>
+    <button class="tab" data-tab="factura">Facturación mensual</button>
+    <button class="tab" data-tab="evolucion">Evolución ejecutados</button>
+    <button class="tab" data-tab="millicom">Detalle Millicom</button>
+    <button class="tab" data-tab="detalle">Detalle de sitios</button>
+  </nav>
 </header>
 
 <div class="dash" id="captureBody">
 
+<!-- ─── 1. RESUMEN ─────────────────────────────────────────── -->
+<section class="tab-pane on" id="tab-resumen">
   <div class="kpi-row">
     <div class="kc kc-tot">
       <div class="kc-lbl">Total Apagados</div>
@@ -403,32 +592,20 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     <div class="kc kc-ur">
       <div class="kc-lbl">MILLICOM</div>
       <div class="kc-val" id="kUr">—</div>
-      <div class="kc-sub">Responsabilidad UniRed</div>
+      <div class="kc-sub">Responsabilidad UniRed / Millicom</div>
       <div class="kc-fin-row">
-        <div class="kc-fin-item">
-          <div class="kc-fin-lbl">VPM del grupo</div>
-          <div class="kc-fin-val" id="kUrVpm">—</div>
-        </div>
-        <div class="kc-fin-item kc-fin-right">
-          <div class="kc-fin-lbl">% del total</div>
-          <div class="kc-fin-val" id="kUrPct">—</div>
-        </div>
+        <div class="kc-fin-item"><div class="kc-fin-lbl">VPM del grupo</div><div class="kc-fin-val" id="kUrVpm">—</div></div>
+        <div class="kc-fin-item kc-fin-right"><div class="kc-fin-lbl">% del total</div><div class="kc-fin-val" id="kUrPct">—</div></div>
       </div>
-      <button type="button" class="kc-detail-btn" id="btnMillicomDetail">Ver detalle →</button>
+      <button type="button" class="kc-detail-btn" data-goto="millicom">Ver detalle →</button>
     </div>
     <div class="kc kc-az">
       <div class="kc-lbl">Azimut</div>
       <div class="kc-val" id="kAz">—</div>
-      <div class="kc-sub">Cancelar + Devolver + Ceder</div>
+      <div class="kc-sub" id="kAzSub">Cancelar + Devolver + Ceder</div>
       <div class="kc-fin-row">
-        <div class="kc-fin-item">
-          <div class="kc-fin-lbl">Ahorro acumulado</div>
-          <div class="kc-fin-val" id="kAzAcum">—</div>
-        </div>
-        <div class="kc-fin-item kc-fin-right">
-          <div class="kc-fin-lbl">% del total</div>
-          <div class="kc-fin-val" id="kAzPct">—</div>
-        </div>
+        <div class="kc-fin-item"><div class="kc-fin-lbl">Ahorro acumulado</div><div class="kc-fin-val" id="kAzAcum">—</div></div>
+        <div class="kc-fin-item kc-fin-right"><div class="kc-fin-lbl">% del total</div><div class="kc-fin-val" id="kAzPct">—</div></div>
       </div>
     </div>
     <div class="kc kc-av">
@@ -437,7 +614,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
       <div class="kc-frac"><strong id="kAzEjec">0</strong> ejecutados de <strong id="kAzTot">0</strong></div>
       <div class="kc-bar-wrap"><div class="kc-bar-fill" id="barAv" style="width:0%"></div></div>
       <div class="kc-hint">Gestión = Ejecutado ÷ Azimut total</div>
-      <button type="button" class="kc-detail-btn kc-detail-btn-cyan" id="btnEvolucion">Ver evolución →</button>
+      <button type="button" class="kc-detail-btn kc-detail-btn-cyan" data-goto="evolucion">Ver evolución →</button>
     </div>
   </div>
 
@@ -455,11 +632,11 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
     <div class="fc">
       <div class="fc-lbl">Ahorro Acumulado</div>
       <div class="fc-val orange" id="fAcum">—</div>
-      <div class="fc-hint">Σ (Valor prom. mensual × Meses con ahorro)</div>
+      <div class="fc-hint">Σ Valor Ahorro Acumulado (Valor prom. mensual × Meses con ahorro)</div>
     </div>
     <div class="pct-card">
       <div class="pm">
-        <div class="pm-lbl">Avance Azimut</div>
+        <div class="pm-lbl">Logrado vs objetivo</div>
         <div class="pm-val" id="pmAz">—</div>
         <div class="pm-bar"><div class="pm-fill" id="pmBar" style="width:0%"></div></div>
       </div>
@@ -470,178 +647,347 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
   <div class="btm-grid">
     <div class="panel">
       <div class="ptitle">Estado Azimut — Ejecutados</div>
-      <table class="st">
-        <thead><tr><th>Estado Azimut</th><th>Sitios</th></tr></thead>
-        <tbody id="eaB"></tbody>
-      </table>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="panel">
-        <div class="ptitle" id="urTitle">Resumen UniRed — Cancelar · Devolver · Ceder</div>
+      <div class="pscroll" style="max-height:360px">
         <table class="st">
-          <thead><tr>
-            <th>UniRed</th><th>Sitios</th><th>Valor Prom. Mensual</th>
-            <th id="thMes">Consolidado Reciente</th>
-          </tr></thead>
-          <tbody id="urB"></tbody>
+          <thead><tr><th>Estado Azimut</th><th>Sitios</th></tr></thead>
+          <tbody id="eaB"></tbody>
         </table>
       </div>
     </div>
     <div class="panel">
-      <div class="ptitle">Distribución por Región</div>
-      <div class="rb" id="regB"></div>
-      <div class="rb-legend">
-        <span><span class="rb-dot" style="background:var(--green)"></span>Azimut</span>
-        <span><span class="rb-dot" style="background:var(--cyan)"></span>UniRed</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="tw">
-    <div class="ttb">
-      <div class="ttb-t">Detalle de Sitios</div>
-      <div class="ti">Mostrando <strong id="tCnt">0</strong> sitios · 50 por página</div>
-      <button class="pg" id="btnClear" style="margin-left:8px">↺ Limpiar</button>
-    </div>
-    <div class="tscroll">
-      <table class="mt">
-        <thead><tr>
-          <th>Site</th><th>NIC</th><th>Nombre del Sitio</th>
-          <th>Operador</th><th>Región</th><th>UniRed</th>
-          <th>Estado Azimut</th><th>Gestión</th>
-          <th>Comercializador</th><th>Responsable</th>
-        </tr></thead>
-        <tbody id="tB"></tbody>
-      </table>
-    </div>
-    <div class="pg-wrap" id="pgN"></div>
-  </div>
-
-</div>
-</div>
-
-<!-- ═══ HOJA 2 · DETALLE MILLICOM (oculta por defecto) ═══════════ -->
-<div id="millicomView" style="display:none">
-  <header class="hdr">
-    <div class="hdr-top">
-      <img class="hdr-logo" id="dashLogo2" alt="Azimut Energía">
-      <div class="hdr-div"></div>
-      <div>
-        <div class="hdr-t">Detalle · Responsabilidad Millicom</div>
-        <div class="hdr-s">Cuentas no gestionadas por Azimut (excluye Cancelar / Devolver)</div>
-      </div>
-      <div class="hdr-date">Actualizado: <strong id="mDate">—</strong></div>
-      <div class="hdr-actions">
-        <button class="hdr-btn primary" id="btnBackMillicom"><span>←</span> Volver al dashboard</button>
-      </div>
-    </div>
-  </header>
-  <div class="dash">
-    <div class="tw">
-      <div class="ttb">
-        <div class="ttb-t">Resumen dinámico — UniRed × Estado Azimut</div>
-        <div class="ti"><strong id="mCnt">0</strong> sitios</div>
-      </div>
-      <div class="tscroll">
-        <table class="mt">
-          <thead id="mThead"></thead>
-          <tbody id="mB"></tbody>
+      <div class="ptitle">Resumen UniRed</div>
+      <div class="pscroll" style="max-height:360px">
+        <table class="st">
+          <thead><tr><th>UniRed</th><th>Sitios</th><th>Ejecutados</th><th>Valor Prom. Mensual</th><th id="thMes">Consolidado reciente</th></tr></thead>
+          <tbody id="urB"></tbody>
         </table>
       </div>
+      <div class="panel-note">Clic en una fila para filtrar por ese valor de UniRed.</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Distribución por Región</div>
+      <div class="hb" id="regB"></div>
+      <div class="legend"><span><i class="seg-az"></i>Azimut</span><span><i class="seg-ur"></i>Millicom</span></div>
     </div>
   </div>
-</div>
 
-<!-- ═══ HOJA 3 · EVOLUCIÓN MENSUAL EJECUTADOS (oculta por defecto) ══ -->
-<div id="evolucionView" style="display:none">
-  <header class="hdr">
-    <div class="hdr-top">
-      <img class="hdr-logo" id="dashLogo3" alt="Azimut Energía">
-      <div class="hdr-div"></div>
-      <div>
-        <div class="hdr-t">Evolución Mensual · Ejecutados</div>
-        <div class="hdr-s">Conteo por mes según Fecha de Gestión</div>
+  <div class="g2">
+    <div class="panel">
+      <div class="ptitle">UniRed × Responsabilidad <span style="color:var(--text-dim);text-transform:none;letter-spacing:0">· número de cuentas</span></div>
+      <div class="pscroll"><table class="pv" id="pvResp"></table></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">UniRed × Responsable de la cuenta
+        <span class="ptools" id="pvPagoTools"><button data-m="n" class="on">Sitios</button><button data-m="v">VPM</button></span>
       </div>
-      <div class="hdr-date">Actualizado: <strong id="eDate">—</strong></div>
-      <div class="hdr-actions">
-        <button class="hdr-btn primary" id="btnBackEvolucion"><span>←</span> Volver al dashboard</button>
+      <div class="pscroll"><table class="pv" id="pvPago"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 2. DESMONTE Y GESTIÓN ──────────────────────────────── -->
+<section class="tab-pane" id="tab-desmonte">
+  <div class="mk-row">
+    <div class="mk"><div class="mk-lbl">Desmontados con acta</div><div class="mk-val" id="mActa">—</div><div class="mk-sub" id="mActaS">—</div></div>
+    <div class="mk"><div class="mk-lbl">TX apagada (OFF)</div><div class="mk-val" id="mTxOff">—</div><div class="mk-sub" id="mTxOffS">—</div></div>
+    <div class="mk"><div class="mk-lbl">TX permanece</div><div class="mk-val" id="mTxPer">—</div><div class="mk-sub" id="mTxPerS">—</div></div>
+    <div class="mk"><div class="mk-lbl">Para gestión de retiro</div><div class="mk-val" id="mRetiro">—</div><div class="mk-sub">Total − UniRed “Permanece”</div></div>
+    <div class="mk"><div class="mk-lbl">Atención vencida</div><div class="mk-val" id="mVenc">—</div><div class="mk-sub" id="mVencS">—</div></div>
+  </div>
+
+  <div class="g3">
+    <div class="panel">
+      <div class="ptitle">Gestión</div>
+      <div class="hb" id="hbGestion"></div>
+      <div class="panel-note">Clic en una barra para ver esos sitios en el detalle.</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Categoría</div>
+      <div class="hb" id="hbCategoria"></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Estado Azimut</div>
+      <div class="hb pscroll" id="hbEstado" style="max-height:470px"></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ptitle">TOWER CO <span style="color:var(--text-dim);text-transform:none;letter-spacing:0">· Azimut vs Millicom</span></div>
+      <div class="hb" id="hbTower"></div>
+      <div class="legend"><span><i class="seg-az"></i>Azimut</span><span><i class="seg-ur"></i>Millicom</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="panel">
+        <div class="ptitle">Estado TX</div>
+        <div class="hb" id="hbTx"></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle">Sitio desmontado, con acta de entrega</div>
+        <div class="hb" id="hbActa"></div>
       </div>
     </div>
-  </header>
-  <div class="dash">
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ptitle">Tiempos de atención</div>
+      <div class="hb" id="hbTiempos"></div>
+      <div class="panel-note">Solo sitios con “Tiempos de atencion” diligenciado.</div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Estado Tigo</div>
+      <div class="hb" id="hbTigo"></div>
+      <div class="panel-note">Solo sitios con “estado tigo” diligenciado.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 3. COMERCIALIZADORES ───────────────────────────────── -->
+<section class="tab-pane" id="tab-comercial">
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Desempeño por comercializador</div>
+      <div class="ti"><strong id="comCnt">0</strong> comercializadores · clic en una fila para filtrar</div>
+    </div>
+    <div class="tscroll" style="max-height:640px">
+      <table class="mt" id="comTable">
+        <thead id="comHead"></thead>
+        <tbody id="comBody"></tbody>
+      </table>
+    </div>
+    <div class="panel-note" id="comNote"></div>
+  </div>
+</section>
+
+<!-- ─── 4. FACTURACIÓN MENSUAL ─────────────────────────────── -->
+<section class="tab-pane" id="tab-factura">
+  <div class="mk-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="mk"><div class="mk-lbl" id="fcFirstL">Primer mes</div><div class="mk-val" id="fcFirst">—</div><div class="mk-sub">Σ facturado sitios filtrados</div></div>
+    <div class="mk"><div class="mk-lbl" id="fcLastL">Último mes</div><div class="mk-val" id="fcLast">—</div><div class="mk-sub">Σ facturado sitios filtrados</div></div>
+    <div class="mk"><div class="mk-lbl">Variación primer → último</div><div class="mk-val" id="fcVar">—</div><div class="mk-sub" id="fcVarS">—</div></div>
+    <div class="mk"><div class="mk-lbl">Sitios en $0 último mes</div><div class="mk-val" id="fcZero">—</div><div class="mk-sub" id="fcZeroS">—</div></div>
+  </div>
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Facturación por mes — columnas “Consolidado &lt;mes&gt;”</div>
+      <div class="ti"><strong id="fcN">0</strong> meses detectados</div>
+    </div>
+    <div class="legend" style="padding-top:12px"><span><i class="seg-az"></i>Azimut</span><span><i class="seg-ur"></i>Millicom</span></div>
+    <div class="col-chart" id="fcChart"></div>
+  </div>
+  <div class="tw" style="margin-top:18px">
+    <div class="ttb"><div class="ttb-t">Tabla de facturación mensual</div></div>
+    <div class="tscroll">
+      <table class="mt">
+        <thead><tr><th>Mes</th><th class="num">Total</th><th class="num">Azimut</th><th class="num">Millicom</th><th class="num">Var. vs mes anterior</th><th class="num">Sitios con valor &gt; 0</th></tr></thead>
+        <tbody id="fcBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 5. EVOLUCIÓN EJECUTADOS ────────────────────────────── -->
+<section class="tab-pane" id="tab-evolucion">
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Sitios ejecutados por mes (según Fecha de Gestión)</div>
+      <div class="ti"><strong id="eCnt">0</strong> sitios con Fecha de Gestión</div>
+    </div>
+    <div class="evo-legend">
+      <span class="evo-lg"><span class="evo-dot evo-dot-g"></span> Gestión = Ejecutado</span>
+      <span class="evo-lg"><span class="evo-dot evo-dot-a"></span> Gestión Actas = Ejecutado</span>
+    </div>
+    <div class="evo-chart" id="evoChart"></div>
+  </div>
+  <div class="g2" style="margin-top:18px">
     <div class="tw">
-      <div class="ttb">
-        <div class="ttb-t">Sitios ejecutados por mes</div>
-        <div class="ti"><strong id="eCnt">0</strong> sitios con Fecha de Gestión</div>
-      </div>
-      <div class="evo-legend">
-        <span class="evo-lg"><span class="evo-dot evo-dot-g"></span> Gestión = Ejecutado</span>
-        <span class="evo-lg"><span class="evo-dot evo-dot-a"></span> Gestión Actas = Ejecutado</span>
-      </div>
-      <div class="evo-chart" id="evoChart"></div>
-    </div>
-
-    <div class="tw" style="margin-top:18px;max-width:420px;">
-      <div class="ttb">
-        <div class="ttb-t">Total global — Ejecutados</div>
-      </div>
+      <div class="ttb"><div class="ttb-t">Total global — Ejecutados</div></div>
       <table class="st">
         <thead><tr><th>Columna</th><th>Ejecutados</th></tr></thead>
         <tbody id="eGlobalB"></tbody>
       </table>
     </div>
+    <div class="tw">
+      <div class="ttb"><div class="ttb-t">Acumulado por mes</div></div>
+      <div class="pscroll" style="max-height:300px">
+        <table class="st">
+          <thead><tr><th>Mes</th><th>Ejecutados mes</th><th>Acumulado</th></tr></thead>
+          <tbody id="eCumB"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- ─── 6. DETALLE MILLICOM ────────────────────────────────── -->
+<section class="tab-pane" id="tab-millicom">
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Resumen dinámico — UniRed × Estado Azimut (fuera del grupo Azimut)</div>
+      <div class="ti"><strong id="mCnt">0</strong> sitios</div>
+    </div>
+    <div class="tscroll" style="max-height:640px">
+      <table class="pv">
+        <thead id="mThead"></thead>
+        <tbody id="mB"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 7. DETALLE DE SITIOS ───────────────────────────────── -->
+<section class="tab-pane" id="tab-detalle">
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Detalle de Sitios</div>
+      <div class="ti">Mostrando <strong id="tCnt">0</strong> sitios · 50 por página · clic en un encabezado para ordenar, en una fila para ver la ficha completa</div>
+    </div>
+    <div class="tscroll" style="max-height:620px">
+      <table class="mt">
+        <thead id="tH"></thead>
+        <tbody id="tB"></tbody>
+      </table>
+    </div>
+    <div class="pg-wrap" id="pgN"></div>
+  </div>
+</section>
+
 </div>
+</div>
+
+<!-- ═══ FICHA DEL SITIO ═══════════════════════════════════════ -->
+<div class="drw-bg" id="drwBg"></div>
+<aside class="drw" id="drw" aria-label="Ficha del sitio">
+  <div class="drw-h">
+    <div><div class="t" id="drwT">—</div><div class="s" id="drwS">—</div></div>
+    <button id="drwClose">✕ Cerrar</button>
+  </div>
+  <input class="drw-srch" id="drwSrch" placeholder="Filtrar campos…">
+  <div class="drw-b" id="drwB"></div>
+</aside>
+
+<div id="tip"></div>
+<div class="toast" id="toast" role="status"></div>
 
 <!-- ═══ LIBRERÍAS ═════════════════════════════════════════════════ -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 
 <script>
-/* ═════════════════════════════════════════════════════════════
-   LOGO EN BASE64 (mismo del original)
-   ═════════════════════════════════════════════════════════════ */
 const LOGO_B64 = 'data:image/jpeg;base64,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';
-document.getElementById('brandLogo').src  = LOGO_B64;
-document.getElementById('dashLogo').src   = LOGO_B64;
-document.getElementById('dashLogo2').src  = LOGO_B64;
-document.getElementById('dashLogo3').src  = LOGO_B64;
+['brandLogo','dashLogo'].forEach(id=> document.getElementById(id).src = LOGO_B64);
+
+/* Vista previa (artifact): las descargas se bloquean, se avisa al usuario */
+const PREVIEW = false;
+
+/* ═══ TEMA CLARO / OSCURO ═══ */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-az', t);
+  const lbl = t==='light' ? '☾ Oscuro' : '☀ Claro';
+  ['btnTheme','btnTheme0'].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent = lbl; });
+  try{ localStorage.setItem('az-theme', t); }catch(e){}
+}
+(function(){
+  let t = 'dark';
+  try{ t = localStorage.getItem('az-theme') || 'dark'; }catch(e){}
+  applyTheme(t);
+})();
+['btnTheme','btnTheme0'].forEach(id=> document.getElementById(id).addEventListener('click', ()=>
+  applyTheme(document.documentElement.getAttribute('data-az')==='light' ? 'dark' : 'light')));
+
+let _toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(_toastT); _toastT = setTimeout(()=> el.classList.remove('on'), 4500);
+}
 
 /* ═════════════════════════════════════════════════════════════
-   VALIDACIÓN DEL ARCHIVO EXCEL
+   CONFIGURACIÓN
    ═════════════════════════════════════════════════════════════ */
 const SHEET_NAME = 'Consolidado Apagados';
-const REQUIRED_HEADERS = [
-  'Operador',
-  'Pair Site (Offgrid) Emplazamiento',
-  'NIC',
-  'Nombre del Sitio',
-  'Comercializador',
-  'Valor promedio mensual',
-  'UniRed',
-  'Estado Azimut',
-  'Gestión',
-  'Meses con ahorro',
-  'Valor Ahorro Acumulado',
-  'Región',
-  'Responsable de la cuenta'
-];
+/* Grupo Azimut (valores de la columna UniRed). “Devuelta” es la devolución ya ejecutada. */
+const AZIMUT_GROUP = ['Cancelar','Devolver','Ceder','Devuelta'];
+/* Rango válido para “Dias para la cancelacion” (excluye valores atípicos por fechas vacías) */
+const DIAS_MIN = 0, DIAS_MAX = 1500;
 
-/* Normalizador: minúsculas + sin tildes + trim */
+/* Columnas obligatorias (clave interna → encabezado en Excel) */
+const REQ = {
+  Operator:'Operador', Site:'Pair Site (Offgrid) Emplazamiento', NIC:'NIC',
+  Nombre:'Nombre del Sitio', Comercializador:'Comercializador', VPM:'Valor promedio mensual',
+  UniRed:'UniRed', Estado:'Estado Azimut', Gestion:'Gestión', Meses:'Meses con ahorro',
+  Region:'Región', Responsable:'Responsable de la cuenta'
+};
+/* Columnas opcionales: si no existen, la sección correspondiente queda vacía */
+const OPT = {
+  Acumulado:'Valor Ahorro Acumulado', Tower:'TOWER CO', TX:'TX', RAN:'RAN',
+  Acta:'SITIO DESMONTADO, CON ACTA DE ENTREGA', Respons:'Responsabilidad', Categoria:'Categoria',
+  FechaGestion:'Fecha de Gestión', InicioGestion:'Inicio de Gestion', GestionActas:'Gestión Actas',
+  Comentario:'Comentario', Seguimiento:'Seguimiento', Tiempos:'Tiempos de atencion',
+  Dias:'Dias para la cancelacion', EstadoTigo:'estado tigo', NoCedido:'Valor No cedido',
+  Energia:'Energía', Alumbrado:'Alumbrado Público', Titular:'Titular'
+};
+
+const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+/* ═════════════════════════════════════════════════════════════
+   UTILIDADES
+   ═════════════════════════════════════════════════════════════ */
 const _ACCENTS_RE = new RegExp('[̀-ͯ]', 'g');
 function norm(s){
   if(s==null) return '';
-  return String(s).toLowerCase().normalize('NFD')
-    .replace(_ACCENTS_RE,'').replace(/\s+/g,' ').trim();
+  return String(s).toLowerCase().normalize('NFD').replace(_ACCENTS_RE,'').replace(/\s+/g,' ').trim();
 }
-
-/* Grupo Azimut: Cancelar, Devolver y Ceder */
-function isAzimut(u){
-  return u==='Cancelar' || u==='Devolver' || u==='Ceder';
+const fmtN = n => (n||0).toLocaleString('es-CO');
+function fmtMill(v){
+  if(!v) return '$ 0,00 mill.';
+  return '$ '+(v/1e6).toLocaleString('es-CO',{minimumFractionDigits:2, maximumFractionDigits:2})+' mill.';
 }
+function cop(v){
+  if(!v) return '—';
+  const a = Math.abs(v), s = v<0?'-':'';
+  if(a>=1e9) return s+'$ '+(a/1e9).toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})+' MM';
+  if(a>=1e6) return s+'$ '+(a/1e6).toLocaleString('es-CO',{minimumFractionDigits:1,maximumFractionDigits:1})+' M';
+  return s+'$ '+Math.round(a).toLocaleString('es-CO');
+}
+function pct(a,b,d=1){ return b>0 ? (a/b*100).toFixed(d).replace('.',',')+'%' : '—'; }
+function escHtml(s){
+  if(s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+const escAttr = s => escHtml(s).replace(/'/g,'&#39;');
+function fmtDate(d){
+  if(!(d instanceof Date) || isNaN(d)) return '';
+  return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+}
+function nowStr(){ const n=new Date(); return fmtDate(n)+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
+const num = v => {
+  if(v==null || v==='' || v===' ') return 0;
+  if(typeof v==='number') return isFinite(v)? v : 0;
+  if(v instanceof Date) return 0;
+  const n = parseFloat(String(v).replace(/[^\d.\-]/g,''));
+  return isNaN(n)? 0 : n;
+};
+/* Texto limpio; '0' y espacios se consideran vacío (el Excel usa 0 como relleno) */
+const str = v => {
+  if(v==null) return '';
+  if(v instanceof Date) return v.getFullYear()<2000 ? '' : fmtDate(v);
+  const s = String(v).trim();
+  return (s==='0' || s==='#N/A') ? '' : s;
+};
+/* Fecha válida (descarta horas sueltas 00:00 y seriales absurdos) */
+function toDate(v){
+  if(v instanceof Date && !isNaN(v)) return v.getFullYear()>=2000 ? v : null;
+  if(typeof v==='number' && v>36526 && v<60000){ const d=new Date(Math.round((v-25569)*864e5)); return d; }
+  return null;
+}
+const isAz   = r => AZIMUT_GROUP.includes(r.UniRed);
+const isEjec = v => /^ejecutado/.test(norm(v));
 
 /* ═════════════════════════════════════════════════════════════
-   DRAG & DROP
+   CARGA DEL ARCHIVO
    ═════════════════════════════════════════════════════════════ */
 const dz = document.getElementById('dropzone');
 const fi = document.getElementById('fileInput');
@@ -649,10 +995,7 @@ const stMsg = document.getElementById('statusMsg');
 
 document.getElementById('pickBtn').addEventListener('click', e=>{ e.stopPropagation(); fi.click(); });
 dz.addEventListener('click', ()=> fi.click());
-fi.addEventListener('change', e=>{
-  if(e.target.files[0]) handleFile(e.target.files[0]);
-});
-
+fi.addEventListener('change', e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
 ['dragenter','dragover'].forEach(ev=>{
   dz.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); dz.classList.add('drag'); });
   document.body.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); });
@@ -660,406 +1003,617 @@ fi.addEventListener('change', e=>{
 ['dragleave','drop'].forEach(ev=>{
   dz.addEventListener(ev, e=>{ e.preventDefault(); e.stopPropagation(); if(ev==='dragleave' && e.target!==dz) return; dz.classList.remove('drag'); });
 });
-dz.addEventListener('drop', e=>{
-  const f = e.dataTransfer.files[0];
-  if(f) handleFile(f);
-});
+dz.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(f) handleFile(f); });
 
-function showStatus(type, html){
-  stMsg.className = 'status-msg show ' + type;
-  stMsg.innerHTML = html;
-}
+function showStatus(type, html){ stMsg.className = 'status-msg show ' + type; stMsg.innerHTML = html; }
 function clearStatus(){ stMsg.className = 'status-msg'; stMsg.innerHTML=''; }
 
 function handleFile(file){
   clearStatus();
-  const nameOk = /\.(xlsx|xlsm|xls)$/i.test(file.name);
-  if(!nameOk){
-    showStatus('error', 'El archivo <strong>'+file.name+'</strong> no es un Excel válido (.xlsx / .xlsm / .xls).');
+  if(!/\.(xlsx|xlsm|xls)$/i.test(file.name)){
+    showStatus('error', 'El archivo <strong>'+escHtml(file.name)+'</strong> no es un Excel válido (.xlsx / .xlsm / .xls).');
     return;
   }
-  showStatus('loading', '<span class="spinner"></span> Leyendo <strong>'+file.name+'</strong> ('+(file.size/1024/1024).toFixed(1)+' MB)…');
-
+  if(typeof XLSX === 'undefined'){
+    showStatus('error', 'No se pudo cargar la librería de lectura de Excel. Revisa tu conexión a internet y recarga la página.');
+    return;
+  }
+  showStatus('loading', '<span class="spinner"></span> Leyendo <strong>'+escHtml(file.name)+'</strong> ('+(file.size/1024/1024).toFixed(1)+' MB)… solo se procesa la hoja “'+SHEET_NAME+'”.');
   const reader = new FileReader();
   reader.onload = ev=>{
-    try{
-      const data = new Uint8Array(ev.target.result);
-      const wb = XLSX.read(data, {type:'array', cellDates:true});
-      processWorkbook(wb, file.name);
-    }catch(err){
-      console.error(err);
-      showStatus('error', 'Ocurrió un error al leer el archivo: <strong>'+err.message+'</strong>');
-    }
+    setTimeout(()=>{
+      try{
+        const data = new Uint8Array(ev.target.result);
+        /* 1. Leer solo los nombres de hojas (rápido) */
+        const names = XLSX.read(data, {type:'array', bookSheets:true}).SheetNames || [];
+        const target = names.find(n => norm(n) === norm(SHEET_NAME));
+        if(!target){
+          showStatus('error',
+            'El Excel <strong>'+escHtml(file.name)+'</strong> no tiene la hoja requerida.<br>' +
+            '<strong>Hoja esperada:</strong> "'+SHEET_NAME+'"<br>' +
+            '<strong>Hojas encontradas:</strong> '+ (names.length? escHtml(names.join(', ')) : '(ninguna)'));
+          return;
+        }
+        /* 2. Parsear únicamente esa hoja */
+        const wb = XLSX.read(data, {type:'array', cellDates:true, sheets:[target], dense:true});
+        processSheet(wb.Sheets[target], target, file.name);
+      }catch(err){
+        console.error(err);
+        showStatus('error', 'Ocurrió un error al leer el archivo: <strong>'+escHtml(err.message)+'</strong>');
+      }
+    }, 30);
   };
   reader.onerror = ()=> showStatus('error', 'No se pudo leer el archivo. Intenta de nuevo.');
   reader.readAsArrayBuffer(file);
 }
 
-function processWorkbook(wb, fname){
-  /* 1. Validar que exista la hoja principal */
-  const sheetNames = wb.SheetNames || [];
-  const targetSheet = sheetNames.find(n => norm(n) === norm(SHEET_NAME));
-  if(!targetSheet){
-    showStatus('error',
-      'El Excel <strong>'+fname+'</strong> no tiene la hoja requerida.<br>' +
-      '<strong>Hoja esperada:</strong> "'+SHEET_NAME+'"<br>' +
-      '<strong>Hojas encontradas:</strong> '+ (sheetNames.length? sheetNames.join(', ') : '(ninguna)')
-    );
+let HEADERS = [], CONS = [], IDX = {};
+
+function processSheet(ws, sheetName, fname){
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true, blankrows:false});
+  /* Fila de encabezados: la primera (de las 10 iniciales) que contenga UniRed y NIC */
+  let hr = rows.slice(0,10).findIndex(r => r && r.some(c=>norm(c)==='unired') && r.some(c=>norm(c)==='nic'));
+  if(hr === -1){
+    showStatus('error','No se encontró la fila de encabezados en la hoja "'+escHtml(sheetName)+'" (se buscan las columnas “UniRed” y “NIC” en las primeras 10 filas).');
     return;
   }
+  HEADERS = rows[hr].map(h => h==null? '' : String(h).trim());
+  const find = name => HEADERS.findIndex(h => norm(h) === norm(name));
 
-  /* 2. Leer como array-de-filas: fila 1 = totales, fila 2 = encabezados, fila 3+ = datos */
-  const ws = wb.Sheets[targetSheet];
-  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true});
-  if(rows.length < 3){
-    showStatus('error', 'La hoja "'+targetSheet+'" tiene menos de 3 filas. Se esperaba: fila 1 totales, fila 2 encabezados, fila 3+ datos.');
-    return;
-  }
-  const headers = rows[1].map(h => h==null? '' : String(h));
-
-  /* 3. Validar encabezados obligatorios */
   const missing = [];
-  const idx = {};
-  REQUIRED_HEADERS.forEach(rh=>{
-    const i = headers.findIndex(h => norm(h) === norm(rh));
-    if(i === -1) missing.push(rh);
-    else idx[rh] = i;
-  });
+  IDX = {};
+  Object.entries(REQ).forEach(([k,h])=>{ const i=find(h); if(i===-1) missing.push(h); else IDX[k]=i; });
   if(missing.length){
-    showStatus('error',
-      'La hoja "'+targetSheet+'" no tiene la estructura esperada. Faltan columnas obligatorias:' +
-      '<ul>' + missing.map(m=>'<li>'+m+'</li>').join('') + '</ul>'
-    );
+    showStatus('error','La hoja "'+escHtml(sheetName)+'" no tiene la estructura esperada. Faltan columnas obligatorias:<ul>'+missing.map(m=>'<li>'+escHtml(m)+'</li>').join('')+'</ul>');
     return;
   }
+  Object.entries(OPT).forEach(([k,h])=>{ IDX[k]=find(h); });
 
-  /* 4. Detectar columna “Consolidado <mes> <año>” más reciente (la última que aparece) */
-  let consMonthIdx = -1, consMonthLabel = 'Consolidado reciente';
-  headers.forEach((h,i)=>{
-    if(/^consolidado\s+\w+\s+\d{4}/.test(norm(h))){
-      consMonthIdx = i;
-      consMonthLabel = String(h).replace(/\.xlsx$/i,'').trim();
+  /* Columnas mensuales “Consolidado <Mes> <Año>” */
+  CONS = [];
+  HEADERS.forEach((h,i)=>{
+    const m = norm(h).match(/^consolidado\s+([a-z]+)\s+(\d{4})/);
+    if(m){
+      const mi = MESES_ES.indexOf(m[1]);
+      CONS.push({i, label: (mi>=0? MESES_ES[mi] : m[1])+' '+m[2], short:(mi>=0? MES_CORTO[mi]:m[1].slice(0,3))+' '+m[2], key: m[2]+'-'+String(mi+1).padStart(2,'0')});
     }
   });
+  CONS.sort((a,b)=> a.key.localeCompare(b.key));
 
-  /* 5. Detectar columna “Valor No cedido” (opcional) */
-  const idxNoCedido = headers.findIndex(h => norm(h) === norm('Valor No cedido'));
-
-  /* 5b. Detectar columnas opcionales de evolución mensual */
-  const idxFechaGestion = headers.findIndex(h => norm(h) === norm('Fecha de Gestión'));
-  const idxGestionActas = headers.findIndex(h => norm(h) === norm('Gestión Actas'));
-
-  /* 6. Parsear filas → DATA */
-  const num = v => {
-    if(v==null || v==='' || v===' ') return 0;
-    const n = typeof v==='number'? v : parseFloat(String(v).replace(/[^\d.\-]/g,''));
-    return isNaN(n)? 0 : n;
-  };
-  const str = v => (v==null || v===' ')? '' : String(v).trim();
-
-  const DATA = [];
-  for(let r=2; r<rows.length; r++){
-    const row = rows[r];
-    if(!row) continue;
-    const site = str(row[idx['Pair Site (Offgrid) Emplazamiento']]);
-    const nic  = str(row[idx['NIC']]);
-    /* Fila vacía: sin Site y sin NIC → skip */
+  const g = (row,k) => IDX[k]>=0 ? row[IDX[k]] : null;
+  const out = [];
+  for(let r=hr+1; r<rows.length; r++){
+    const row = rows[r]; if(!row) continue;
+    const site = str(g(row,'Site')), nic = str(g(row,'NIC'));
+    const ur = str(g(row,'UniRed')), est = str(g(row,'Estado'));
+    /* Filas válidas: tienen sitio o NIC y además UniRed o Estado Azimut
+       (descarta las filas auxiliares que hay al final de la hoja) */
     if(!site && !nic) continue;
-    DATA.push({
-      Site: site,
-      NIC: nic,
-      Nombre_Sitio: str(row[idx['Nombre del Sitio']]),
-      Operator: str(row[idx['Operador']]),
-      Comercializador: str(row[idx['Comercializador']]),
-      VPM: num(row[idx['Valor promedio mensual']]),
-      UniRed: str(row[idx['UniRed']]),
-      Estado_Azimut: str(row[idx['Estado Azimut']]),
-      Gestion: str(row[idx['Gestión']]),
-      ConsMes: consMonthIdx>=0 ? num(row[consMonthIdx]) : 0,
-      ValorNoCedido: idxNoCedido>=0 ? num(row[idxNoCedido]) : 0,
-      Meses: num(row[idx['Meses con ahorro']]),
-      Acumulado: num(row[idx['Valor Ahorro Acumulado']]),
-      Region: str(row[idx['Región']]).toUpperCase(),
-      Responsable: str(row[idx['Responsable de la cuenta']]),
-      FechaGestion: (idxFechaGestion>=0 && row[idxFechaGestion] instanceof Date) ? row[idxFechaGestion] : null,
-      GestionActas: idxGestionActas>=0 ? str(row[idxGestionActas]) : ''
+    if(!ur && !est) continue;
+    const vpm = num(g(row,'VPM')), meses = num(g(row,'Meses'));
+    const diasRaw = num(g(row,'Dias'));
+    out.push({
+      raw: row,
+      Site: site, NIC: nic, Nombre: str(g(row,'Nombre')),
+      Operator: str(g(row,'Operator')).toUpperCase(),
+      Comercializador: str(g(row,'Comercializador')),
+      VPM: vpm, Meses: meses,
+      Acumulado: IDX.Acumulado>=0 ? num(g(row,'Acumulado')) : vpm*meses,
+      UniRed: ur, Estado: est, Gestion: str(g(row,'Gestion')),
+      Region: str(g(row,'Region')).toUpperCase(),
+      Responsable: str(g(row,'Responsable')),
+      Tower: str(g(row,'Tower')), TX: str(g(row,'TX')).toUpperCase(),
+      Acta: str(g(row,'Acta')), Respons: str(g(row,'Respons')).toUpperCase(),
+      Categoria: str(g(row,'Categoria')),
+      FechaGestion: toDate(g(row,'FechaGestion')),
+      GestionActas: str(g(row,'GestionActas')),
+      Seguimiento: str(g(row,'Seguimiento')).toUpperCase(),
+      Tiempos: str(g(row,'Tiempos')), EstadoTigo: str(g(row,'EstadoTigo')),
+      Dias: (diasRaw>DIAS_MIN && diasRaw<=DIAS_MAX) ? diasRaw : null,
+      Cons: CONS.map(c => num(row[c.i]))
     });
   }
+  if(!out.length){ showStatus('error','La hoja "'+escHtml(sheetName)+'" no contiene filas de datos válidas.'); return; }
 
-  if(DATA.length === 0){
-    showStatus('error', 'La hoja "'+targetSheet+'" no contiene filas de datos válidas.');
-    return;
-  }
+  /* Unificar variantes de escritura (mayúsculas, tildes, espacios finales) */
+  ['Gestion','Categoria','Estado','Comercializador','Tower','Acta','UniRed','Responsable','Tiempos','EstadoTigo','GestionActas'].forEach(k=> canon(out,k));
 
-  /* 7. Todo OK → mostrar dashboard */
-  showStatus('loading', '<span class="spinner"></span> Preparando dashboard con <strong>'+DATA.length.toLocaleString('es-CO')+'</strong> sitios…');
-  setTimeout(()=> initDashboard(DATA, consMonthLabel, fname), 50);
+  showStatus('loading', '<span class="spinner"></span> Preparando dashboard con <strong>'+fmtN(out.length)+'</strong> sitios…');
+  setTimeout(()=> initDashboard(out, fname), 30);
+}
+
+function canon(data, key){
+  const groups = {};
+  data.forEach(r=>{
+    const v = r[key]; if(!v) return;
+    const n = norm(v);
+    (groups[n] = groups[n] || {}); groups[n][v] = (groups[n][v]||0)+1;
+  });
+  const best = {};
+  Object.entries(groups).forEach(([n,vs])=>{
+    best[n] = Object.entries(vs).sort((a,b)=>b[1]-a[1] || (/[A-ZÁÉÍÓÚ]/.test(b[0][0])?1:-1))[0][0];
+  });
+  data.forEach(r=>{ if(r[key]) r[key] = best[norm(r[key])]; });
 }
 
 /* ═════════════════════════════════════════════════════════════
-   DASHBOARD
+   ESTADO Y FILTROS
    ═════════════════════════════════════════════════════════════ */
-let DATA=[], filtered=[], page=1;
-const PG=50, SL={resp:'',op:''};
+let DATA=[], filtered=[], page=1, curTab='resumen';
+const PG=50, SL={resp:'',op:'',seg:''};
+let sortKey='', sortDir=1, pagoMode='n', comSort={k:'n',d:-1};
 
-function initDashboard(data, consMonthLabel, fname){
-  DATA = data;
-  filtered = [...DATA];
-  page = 1;
-  SL.resp=''; SL.op='';
-
-  /* Fecha */
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const yy = now.getFullYear();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mn = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('dashDate').textContent = dd+'/'+mm+'/'+yy+' '+hh+':'+mn;
-
-  /* Etiqueta mes reciente en la tabla UniRed */
-  document.getElementById('thMes').textContent = consMonthLabel;
-
-  /* Filtros dinámicos */
+function initDashboard(data, fname){
+  DATA = data; filtered = [...DATA]; page = 1;
+  SL.resp=''; SL.op=''; SL.seg='';
+  document.getElementById('dashDate').textContent = nowStr();
+  document.getElementById('dashFile').textContent = fname;
+  document.getElementById('kAzSub').textContent = AZIMUT_GROUP.join(' + ');
+  document.getElementById('thMes').textContent = CONS.length ? 'Consolidado '+CONS[CONS.length-1].short : 'Consolidado reciente';
   buildFilters();
-
-  /* Toggle vistas */
+  buildDetailHead();
   document.getElementById('uploadView').style.display = 'none';
   document.getElementById('dashboardView').style.display = 'block';
-
-  /* Render inicial */
+  setTab('resumen');
   applyF();
 }
 
+function btnGroup(elId, key, field, minCount){
+  const counts = {};
+  DATA.forEach(r=>{ const v=r[field]; if(v) counts[v]=(counts[v]||0)+1; });
+  const entries = Object.entries(counts).filter(([,c])=>c>=(minCount||1)).sort((a,b)=>b[1]-a[1]);
+  const el = document.getElementById(elId);
+  el.innerHTML = '<button class="sbtn on" data-v="">Todos</button>' +
+    entries.map(([v,c]) => `<button class="sbtn" data-v="${escAttr(v)}">${escHtml(v)}<span class="cnt">${fmtN(c)}</span></button>`).join('');
+  el.querySelectorAll('.sbtn').forEach(b=> b.addEventListener('click', ()=>{
+    el.querySelectorAll('.sbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); SL[key] = b.getAttribute('data-v')||''; page=1; applyF();
+  }));
+}
+function fillSelect(id, label, field){
+  const counts = {};
+  DATA.forEach(r=>{ const v=r[field]; if(v) counts[v]=(counts[v]||0)+1; });
+  const vals = Object.keys(counts).sort((a,b)=>a.localeCompare(b,'es'));
+  const el = document.getElementById(id);
+  el.innerHTML = `<option value="">${label}: Todos</option>` + vals.map(v=>`<option value="${escAttr(v)}">${escHtml(v)} (${fmtN(counts[v])})</option>`).join('');
+  el.onchange = ()=>{ page=1; applyF(); };
+  el.style.display = vals.length ? '' : 'none';
+}
 function buildFilters(){
-  /* Responsable — valores únicos con conteo */
-  const respCounts = {};
-  DATA.forEach(r=>{ if(r.Responsable){ respCounts[r.Responsable] = (respCounts[r.Responsable]||0)+1; } });
-  const respEntries = Object.entries(respCounts).sort((a,b)=>b[1]-a[1]);
-
-  const respGroup = document.getElementById('fRespGroup');
-  respGroup.innerHTML = '<button class="sbtn on" data-resp="">Todos</button>' +
-    respEntries.map(([v,c]) =>
-      `<button class="sbtn" data-resp="${escAttr(v)}">${escHtml(v)}<span class="cnt">${c.toLocaleString('es-CO')}</span></button>`
-    ).join('');
-  respGroup.querySelectorAll('.sbtn').forEach(b=>{
-    b.addEventListener('click', ()=> selectBtn(respGroup, b, 'resp'));
-  });
-
-  /* Operador */
-  const opCounts = {};
-  DATA.forEach(r=>{ if(r.Operator){ opCounts[r.Operator] = (opCounts[r.Operator]||0)+1; } });
-  const opEntries = Object.entries(opCounts).sort((a,b)=>b[1]-a[1]);
-  const opGroup = document.getElementById('fOpGroup');
-  opGroup.innerHTML = '<button class="sbtn on" data-op="">Todos</button>' +
-    opEntries.map(([v,c]) =>
-      `<button class="sbtn" data-op="${escAttr(v)}">${escHtml(v)}<span class="cnt">${c.toLocaleString('es-CO')}</span></button>`
-    ).join('');
-  opGroup.querySelectorAll('.sbtn').forEach(b=>{
-    b.addEventListener('click', ()=> selectBtn(opGroup, b, 'op'));
-  });
-
-  /* Región */
-  const regs = [...new Set(DATA.map(r=>r.Region).filter(v=>v && v!=='0'))].sort();
-  const fReg = document.getElementById('fReg');
-  fReg.innerHTML = '<option value="">Región: Todas</option>' + regs.map(v=>`<option>${escHtml(v)}</option>`).join('');
-  fReg.onchange = ()=>{ page=1; applyF(); };
-
-  /* UniRed */
-  const urs = [...new Set(DATA.map(r=>r.UniRed).filter(Boolean))].sort();
-  const fUr = document.getElementById('fUr');
-  fUr.innerHTML = '<option value="">UniRed: Todos</option>' + urs.map(v=>`<option>${escHtml(v)}</option>`).join('');
-  fUr.onchange = ()=>{ page=1; applyF(); };
-
+  btnGroup('fRespGroup','resp','Responsable');
+  btnGroup('fOpGroup','op','Operator',5);
+  btnGroup('fSegGroup','seg','Seguimiento');
+  fillSelect('fReg','Región','Region');
+  fillSelect('fUr','UniRed','UniRed');
+  fillSelect('fEa','Estado Azimut','Estado');
+  fillSelect('fTw','TOWER CO','Tower');
+  fillSelect('fCom','Comercializador','Comercializador');
   document.getElementById('fSrch').oninput = ()=>{ page=1; applyF(); };
   document.getElementById('btnClear').onclick = resetAll;
 }
-
-function selectBtn(group, btn, key){
-  group.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  SL[key] = btn.getAttribute('data-'+key) || '';
+function setSelect(id, v){
+  const el = document.getElementById(id);
+  if([...el.options].some(o=>o.value===v)){ el.value = v; page=1; applyF(); }
+}
+function resetAll(){
+  SL.resp=''; SL.op=''; SL.seg='';
+  document.querySelectorAll('#fRespGroup .sbtn, #fOpGroup .sbtn, #fSegGroup .sbtn').forEach(b=> b.classList.toggle('on', b.getAttribute('data-v')===''));
+  ['fReg','fUr','fEa','fTw','fCom'].forEach(id=> document.getElementById(id).value='');
+  document.getElementById('fSrch').value = '';
   page = 1; applyF();
 }
 
-/* ── Filtros + recálculo completo ────────────────────────────── */
 function applyF(){
-  const srch = document.getElementById('fSrch').value.toLowerCase().trim();
-  const reg  = document.getElementById('fReg').value;
-  const ur   = document.getElementById('fUr').value;
-
+  const srch = norm(document.getElementById('fSrch').value);
+  const reg = document.getElementById('fReg').value, ur = document.getElementById('fUr').value,
+        ea = document.getElementById('fEa').value, tw = document.getElementById('fTw').value,
+        com = document.getElementById('fCom').value;
   filtered = DATA.filter(r=>{
     if(SL.op   && r.Operator    !== SL.op)   return false;
     if(SL.resp && r.Responsable !== SL.resp) return false;
-    if(reg     && r.Region      !== reg)     return false;
-    if(ur      && r.UniRed      !== ur)      return false;
-    if(srch){
-      const s = (r.Site+' '+r.NIC+' '+r.Nombre_Sitio).toLowerCase();
-      if(s.indexOf(srch) === -1) return false;
-    }
+    if(SL.seg  && r.Seguimiento !== SL.seg)  return false;
+    if(reg && r.Region !== reg) return false;
+    if(ur  && r.UniRed !== ur)  return false;
+    if(ea  && r.Estado !== ea)  return false;
+    if(tw  && r.Tower  !== tw)  return false;
+    if(com && r.Comercializador !== com) return false;
+    if(srch && norm(r.Site+' '+r.NIC+' '+r.Nombre).indexOf(srch) === -1) return false;
     return true;
   });
+  document.getElementById('fCount').textContent = fmtN(filtered.length);
+  renderAll();
+}
+function renderAll(){
+  renderResumen(); renderDesmonte(); renderComercial(); renderFactura();
+  renderEvolucion(); renderMillicom(); renderTable(); renderPag();
+}
 
-  /* KPIs */
-  const tot    = filtered.length;
-  const az     = filtered.filter(r=> isAzimut(r.UniRed)).length;
-  const azEjec = filtered.filter(r=>
-    isAzimut(r.UniRed) &&
-    /ejecutado/i.test(r.Gestion)).length;
-  const avPct = az>0 ? (azEjec/az*100).toFixed(1) : '0.0';
+/* ═════════════════════════════════════════════════════════════
+   PESTAÑAS
+   ═════════════════════════════════════════════════════════════ */
+function setTab(t){
+  curTab = t;
+  document.querySelectorAll('.tab').forEach(b=> b.classList.toggle('on', b.dataset.tab===t));
+  document.querySelectorAll('.tab-pane').forEach(p=> p.classList.toggle('on', p.id==='tab-'+t));
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('.tab').forEach(b=> b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=> b.addEventListener('click', ()=> setTab(b.dataset.goto)));
 
-  document.getElementById('kTot').textContent    = tot.toLocaleString('es-CO');
-  document.getElementById('kUr').textContent     = (tot-az).toLocaleString('es-CO');
-  document.getElementById('kAz').textContent     = az.toLocaleString('es-CO');
-  document.getElementById('kAvAz').textContent   = avPct+'%';
-  document.getElementById('kAzEjec').textContent = azEjec.toLocaleString('es-CO');
-  document.getElementById('kAzTot').textContent  = az.toLocaleString('es-CO');
-  const bw = Math.min(100, parseFloat(avPct)||0);
-  document.getElementById('barAv').style.width   = bw+'%';
-  document.getElementById('pmAz').textContent    = avPct+'%';
-  document.getElementById('pmBar').style.width   = bw+'%';
-  document.getElementById('pmFrac').textContent  = azEjec.toLocaleString('es-CO')+' ejec. / '+az.toLocaleString('es-CO');
-  document.getElementById('tCnt').textContent    = tot.toLocaleString('es-CO');
+/* ═════════════════════════════════════════════════════════════
+   COMPONENTES
+   ═════════════════════════════════════════════════════════════ */
+function countBy(rows, key){
+  const m = {}; rows.forEach(r=>{ const v = r[key] || '(sin dato)'; m[v]=(m[v]||0)+1; });
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+}
+/* Barras horizontales. items: [{label, total, az?, ur?}]; split=true dibuja Azimut/Millicom */
+function hbars(elId, items, opts={}){
+  const el = document.getElementById(elId);
+  if(!items.length){ el.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:16px;font-size:11px">Sin datos para los filtros seleccionados</div>'; return; }
+  const max = Math.max(...items.map(i=>i.total)) || 1;
+  const sum = opts.base || items.reduce((s,i)=>s+i.total,0);
+  el.innerHTML = items.map(i=>{
+    const tip = `<b>${escHtml(i.label)}</b><br>${fmtN(i.total)} sitios (${pct(i.total,sum)})` +
+      (opts.split ? `<br>Azimut: ${fmtN(i.az)} · Millicom: ${fmtN(i.ur)}` : '');
+    const bars = opts.split
+      ? (i.az? `<div class="seg-az" style="width:${i.az/max*100}%"></div>`:'') + (i.ur? `<div class="seg-ur" style="width:${i.ur/max*100}%"></div>`:'')
+      : `<div class="seg-one" style="width:${i.total/max*100}%;${opts.color?'background:'+opts.color:''}"></div>`;
+    return `<div class="hbr ${opts.onClick?'click':''}" data-tip="${escAttr(tip)}" data-v="${escAttr(i.label)}">
+      <div class="hbl" title="${escAttr(i.label)}">${escHtml(i.label)}</div>
+      <div class="hbt">${bars}</div>
+      <div class="hbc">${fmtN(i.total)}<small>${pct(i.total,sum,0)}</small></div></div>`;
+  }).join('');
+  if(opts.onClick) el.querySelectorAll('.hbr').forEach(b=> b.addEventListener('click', ()=> opts.onClick(b.getAttribute('data-v'))));
+}
+function splitItems(rows, key, limit){
+  const m = {};
+  rows.forEach(r=>{
+    const v = r[key] || '(sin dato)';
+    (m[v] = m[v] || {label:v,total:0,az:0,ur:0});
+    m[v].total++; isAz(r) ? m[v].az++ : m[v].ur++;
+  });
+  let arr = Object.values(m).sort((a,b)=>b.total-a.total);
+  if(limit && arr.length>limit){
+    const rest = arr.slice(limit).reduce((s,i)=>({label:'Otros ('+(arr.length-limit)+')',total:s.total+i.total,az:s.az+i.az,ur:s.ur+i.ur}),{total:0,az:0,ur:0});
+    arr = arr.slice(0,limit).concat([rest]);
+  }
+  return arr;
+}
+/* Tabla dinámica genérica. rowsKey × colsKey. mode n=conteo, v=suma VPM */
+function pivot(tableEl, rows, rowKey, colKey, mode, rowOrder){
+  const rs = [...new Set(rows.map(r=>r[rowKey]||'(sin dato)'))];
+  const cs = [...new Set(rows.map(r=>r[colKey]||'(sin dato)'))].sort((a,b)=>a.localeCompare(b,'es'));
+  if(rowOrder) rs.sort((a,b)=>{ const ia=rowOrder.indexOf(a), ib=rowOrder.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'es'); });
+  else rs.sort((a,b)=>a.localeCompare(b,'es'));
+  const P = {}, ct = {}; let gt = 0;
+  rows.forEach(r=>{
+    const a=r[rowKey]||'(sin dato)', b=r[colKey]||'(sin dato)', v = mode==='v' ? r.VPM : 1;
+    P[a]=P[a]||{}; P[a][b]=(P[a][b]||0)+v; ct[b]=(ct[b]||0)+v; gt+=v;
+  });
+  const f = v => !v ? '—' : (mode==='v' ? cop(v) : fmtN(v));
+  const maxCell = Math.max(1, ...rs.flatMap(a=>cs.map(b=>P[a][b]||0)));
+  if(!rs.length){ tableEl.innerHTML = '<tbody><tr><td style="text-align:center;padding:20px;color:var(--text-dim)">Sin datos</td></tr></tbody>'; return; }
+  tableEl.innerHTML =
+    `<thead><tr><th>${escHtml(rowKeyLabel(rowKey))}</th>${cs.map(c=>`<th>${escHtml(c)}</th>`).join('')}<th>Total</th></tr></thead><tbody>` +
+    rs.map(a=>{
+      let t=0;
+      const cells = cs.map(b=>{ const v=P[a][b]||0; t+=v; const op = v? (0.06+0.34*v/maxCell).toFixed(2) : 0;
+        return `<td style="background:rgba(0,180,216,${op})">${f(v)}</td>`; }).join('');
+      return `<tr><td>${escHtml(a)}</td>${cells}<td class="rt">${f(t)}</td></tr>`;
+    }).join('') +
+    `<tr class="tot"><td>Total</td>${cs.map(c=>`<td>${f(ct[c])}</td>`).join('')}<td>${f(gt)}</td></tr></tbody>`;
+}
+const rowKeyLabel = k => ({UniRed:'UniRed', Estado:'Estado Azimut'})[k] || k;
+const UR_ORDER = ['Cancelar','Devolver','Devuelta','Ceder','Pendiente Autorizacion Cancelacion','Permanece','Cuenta en tercero','No Cedido'];
 
-  /* Financieros */
-  let objetivo=0, logrado=0, acum=0, vpmAz=0, vpmUr=0, acumAz=0;
-  filtered.forEach(r=>{
-    const vpm=r.VPM||0, meses=r.Meses||0;
-    const isAz = isAzimut(r.UniRed);
-    if(r.UniRed!=='Permanece') objetivo += vpm;
-    if(/ejecutado/i.test(r.Gestion)) logrado += vpm;
-    acum += vpm*meses;
-    if(isAz){ vpmAz+=vpm; acumAz+=vpm*meses; } else { vpmUr+=vpm; }
+/* ═════════════════════════════════════════════════════════════
+   1. RESUMEN
+   ═════════════════════════════════════════════════════════════ */
+function renderResumen(){
+  const F = filtered, tot = F.length;
+  const azRows = F.filter(isAz), az = azRows.length;
+  const azEjec = azRows.filter(r=>isEjec(r.Gestion)).length;
+  const avPct = az>0 ? azEjec/az*100 : 0;
+
+  document.getElementById('kTot').textContent = fmtN(tot);
+  document.getElementById('kUr').textContent  = fmtN(tot-az);
+  document.getElementById('kAz').textContent  = fmtN(az);
+  document.getElementById('kAvAz').textContent = avPct.toFixed(1).replace('.',',')+'%';
+  document.getElementById('kAzEjec').textContent = fmtN(azEjec);
+  document.getElementById('kAzTot').textContent  = fmtN(az);
+  document.getElementById('barAv').style.width = Math.min(100,avPct)+'%';
+
+  let objetivo=0, logrado=0, acum=0, vpmUr=0, acumAz=0;
+  F.forEach(r=>{
+    if(r.UniRed!=='Permanece') objetivo += r.VPM;
+    if(isEjec(r.Gestion)) logrado += r.VPM;
+    acum += r.Acumulado;
+    if(isAz(r)) acumAz += r.Acumulado; else vpmUr += r.VPM;
   });
   document.getElementById('fObjetivo').textContent = fmtMill(objetivo);
   document.getElementById('fLogrado').textContent  = fmtMill(logrado);
   document.getElementById('fAcum').textContent     = fmtMill(acum);
   document.getElementById('kAzAcum').textContent   = fmtMill(acumAz);
-  document.getElementById('kAzPct').textContent    = tot>0 ? (az/tot*100).toFixed(1)+'%' : '0%';
+  document.getElementById('kAzPct').textContent    = pct(az,tot);
   document.getElementById('kUrVpm').textContent    = fmtMill(vpmUr);
-  document.getElementById('kUrPct').textContent    = tot>0 ? ((tot-az)/tot*100).toFixed(1)+'%' : '0%';
+  document.getElementById('kUrPct').textContent    = pct(tot-az,tot);
+  const lp = objetivo>0 ? logrado/objetivo*100 : 0;
+  document.getElementById('pmAz').textContent = lp.toFixed(1).replace('.',',')+'%';
+  document.getElementById('pmBar').style.width = Math.min(100,lp)+'%';
+  document.getElementById('pmFrac').textContent = 'del objetivo mensual';
 
-  /* Tabla Estado Azimut — sólo Azimut Ejecutados */
-  const eaCounts = {};
-  filtered.forEach(r=>{
-    if(isAzimut(r.UniRed) && /ejecutado/i.test(r.Gestion)){
-      const est = r.Estado_Azimut || '(sin estado)';
-      eaCounts[est] = (eaCounts[est]||0)+1;
-    }
-  });
-  const eaEntries = Object.entries(eaCounts).sort((a,b)=>b[1]-a[1]);
-  const eaTot = eaEntries.reduce((s,[,v])=>s+v,0);
-  document.getElementById('eaB').innerHTML =
-    (eaEntries.length
-      ? eaEntries.map(([est,cnt]) =>
-          `<tr><td>${escHtml(est)}</td>
-               <td style="text-align:right;font-family:monospace">${cnt.toLocaleString('es-CO')}</td>
-          </tr>`).join('')
-      : '<tr><td colspan="2" style="text-align:center;padding:14px;color:var(--text-dim)">Sin resultados</td></tr>'
-    )+`<tr class="tot"><td>Total</td>
-        <td style="text-align:right;font-family:monospace">${eaTot.toLocaleString('es-CO')}</td>
-       </tr>`;
+  /* Estado Azimut de los ejecutados del grupo Azimut */
+  const ea = countBy(azRows.filter(r=>isEjec(r.Gestion)), 'Estado');
+  const eaT = ea.reduce((s,[,v])=>s+v,0);
+  document.getElementById('eaB').innerHTML = (ea.length
+    ? ea.map(([k,v])=>`<tr><td>${escHtml(k)}</td><td>${fmtN(v)}</td></tr>`).join('')
+    : '<tr><td colspan="2" style="text-align:center;padding:14px;color:var(--text-dim)">Sin resultados</td></tr>')
+    + `<tr class="tot"><td>Total</td><td>${fmtN(eaT)}</td></tr>`;
 
-  /* Tabla UniRed — agrupada */
-  const urMap = {};
-  filtered.forEach(r=>{
-    const k = r.UniRed || '(sin UniRed)';
-    if(!urMap[k]) urMap[k] = { unired:k, nic:0, vpm:0, mes:0 };
-    urMap[k].nic += 1;
-    urMap[k].vpm += r.VPM||0;
-    urMap[k].mes += r.ConsMes||0;
+  /* Resumen UniRed */
+  const um = {};
+  F.forEach(r=>{
+    const k = r.UniRed||'(sin dato)';
+    um[k] = um[k] || {k, n:0, e:0, vpm:0, mes:0};
+    um[k].n++; if(isEjec(r.Gestion)) um[k].e++; um[k].vpm += r.VPM; um[k].mes += r.Cons.length ? r.Cons[r.Cons.length-1] : 0;
   });
-  const urOrder = ['Cancelar','Devolver','Ceder','Pendiente Autorizacion Cancelacion','Permanece','No Cedido'];
-  const urEntries = Object.values(urMap).filter(r=>r.unired!=='Permanece').sort((a,b)=>{
-    const ia = urOrder.indexOf(a.unired), ib = urOrder.indexOf(b.unired);
-    if(ia===-1 && ib===-1) return a.unired.localeCompare(b.unired);
-    if(ia===-1) return 1; if(ib===-1) return -1;
-    return ia-ib;
-  });
-  const urTot = urEntries.reduce((s,r)=>({nic:s.nic+r.nic, vpm:s.vpm+r.vpm, mes:s.mes+r.mes}),{nic:0,vpm:0,mes:0});
-  document.getElementById('urB').innerHTML =
-    (urEntries.length
-      ? urEntries.map(r=>`<tr>
-          <td>${escHtml(r.unired)}</td>
-          <td>${r.nic.toLocaleString('es-CO')}</td>
-          <td>${cop(r.vpm)}</td>
-          <td>${cop(r.mes)}</td>
-        </tr>`).join('')
-      : '<tr><td colspan="4" style="text-align:center;padding:14px;color:var(--text-dim)">Sin resultados</td></tr>'
-    )+`<tr class="tot"><td>Total</td>
-        <td>${urTot.nic.toLocaleString('es-CO')}</td>
-        <td>${cop(urTot.vpm)}</td>
-        <td>${cop(urTot.mes)}</td></tr>`;
+  const ue = Object.values(um).sort((a,b)=>{ const ia=UR_ORDER.indexOf(a.k), ib=UR_ORDER.indexOf(b.k); return (ia<0?99:ia)-(ib<0?99:ib) || b.n-a.n; });
+  const ut = ue.reduce((s,r)=>({n:s.n+r.n,e:s.e+r.e,vpm:s.vpm+r.vpm,mes:s.mes+r.mes}),{n:0,e:0,vpm:0,mes:0});
+  const urB = document.getElementById('urB');
+  urB.innerHTML = ue.map(r=>`<tr data-ur="${escAttr(r.k)}" style="cursor:pointer"><td>${bUR(r.k)}</td><td>${fmtN(r.n)}</td><td>${fmtN(r.e)}</td><td>${cop(r.vpm)}</td><td>${cop(r.mes)}</td></tr>`).join('')
+    + `<tr class="tot"><td>Total</td><td>${fmtN(ut.n)}</td><td>${fmtN(ut.e)}</td><td>${cop(ut.vpm)}</td><td>${cop(ut.mes)}</td></tr>`;
+  urB.querySelectorAll('tr[data-ur]').forEach(tr=> tr.addEventListener('click', ()=> setSelect('fUr', tr.dataset.ur)));
 
-  /* Barras por Región */
-  const rd = {};
-  filtered.forEach(r=>{
-    if(!r.Region || r.Region==='0') return;
-    if(!rd[r.Region]) rd[r.Region] = { total:0, az:0, ur:0 };
-    rd[r.Region].total += 1;
-    if(isAzimut(r.UniRed)) rd[r.Region].az += 1;
-    else rd[r.Region].ur += 1;
-  });
-  const rdEntries = Object.entries(rd).sort((a,b)=>b[1].total-a[1].total);
-  const mx = rdEntries.length ? Math.max(...rdEntries.map(([,v])=>v.total)) : 1;
-  document.getElementById('regB').innerHTML =
-    rdEntries.length
-      ? rdEntries.map(([reg,v])=>{
-          const azW = (v.az / mx * 100).toFixed(1);
-          const urW = (v.ur / mx * 100).toFixed(1);
-          return `<div class="rbr">
-            <div class="rbl">${escHtml(reg)}</div>
-            <div class="rbt">
-              <div class="rbaz" style="width:${azW}%" title="Azimut: ${v.az}"></div>
-              <div class="rbur" style="width:${urW}%" title="UniRed: ${v.ur}"></div>
-            </div>
-            <div class="rbc">${v.total}</div>
-          </div>`;
-        }).join('')
-      : '<div style="text-align:center;color:var(--text-dim);padding:12px;font-size:11px">Sin datos por región</div>';
+  /* Región */
+  hbars('regB', splitItems(F.filter(r=>r.Region),'Region'), {split:true, onClick:v=>setSelect('fReg',v)});
 
-  renderTable(); renderPag();
+  /* Pivots */
+  pivot(document.getElementById('pvResp'), F, 'UniRed', 'Respons', 'n', UR_ORDER);
+  pivot(document.getElementById('pvPago'), F, 'UniRed', 'Responsable', pagoMode, UR_ORDER);
+}
+document.querySelectorAll('#pvPagoTools button').forEach(b=> b.addEventListener('click', ()=>{
+  pagoMode = b.dataset.m;
+  document.querySelectorAll('#pvPagoTools button').forEach(x=>x.classList.toggle('on', x===b));
+  pivot(document.getElementById('pvPago'), filtered, 'UniRed', 'Responsable', pagoMode, UR_ORDER);
+}));
+
+/* ═════════════════════════════════════════════════════════════
+   2. DESMONTE Y GESTIÓN
+   ═════════════════════════════════════════════════════════════ */
+function renderDesmonte(){
+  const F = filtered, tot = F.length;
+  const acta = F.filter(r=>norm(r.Acta)==='si').length;
+  const txOff = F.filter(r=>r.TX==='OFF').length, txPer = F.filter(r=>r.TX==='PERMANECE').length;
+  const ret = F.filter(r=>r.UniRed!=='Permanece').length;
+  const tiem = F.filter(r=>r.Tiempos), venc = tiem.filter(r=>norm(r.Tiempos)==='vencido').length;
+  document.getElementById('mActa').textContent = fmtN(acta);
+  document.getElementById('mActaS').textContent = pct(acta,tot)+' del total filtrado';
+  document.getElementById('mTxOff').textContent = fmtN(txOff);
+  document.getElementById('mTxOffS').textContent = pct(txOff,tot)+' del total filtrado';
+  document.getElementById('mTxPer').textContent = fmtN(txPer);
+  document.getElementById('mTxPerS').textContent = pct(txPer,tot)+' del total filtrado';
+  document.getElementById('mRetiro').textContent = fmtN(ret);
+  document.getElementById('mVenc').textContent = fmtN(venc);
+  document.getElementById('mVencS').textContent = 'de '+fmtN(tiem.length)+' con tiempo medido ('+pct(venc,tiem.length)+')';
+
+  const toItems = arr => arr.map(([label,total])=>({label,total}));
+  const goDetalle = (sel)=> v=>{ if(v.startsWith('(')) return; setSelect(sel, v); setTab('detalle'); };
+  hbars('hbGestion', toItems(countBy(F,'Gestion')));
+  hbars('hbCategoria', toItems(countBy(F,'Categoria')));
+  hbars('hbEstado', toItems(countBy(F,'Estado')), {onClick: goDetalle('fEa')});
+  hbars('hbTower', splitItems(F,'Tower',12), {split:true, onClick: v=>{ if(!v.startsWith('Otros')) setSelect('fTw',v); }});
+  hbars('hbTx', toItems(countBy(F,'TX')));
+  hbars('hbActa', toItems(countBy(F,'Acta')));
+  hbars('hbTiempos', toItems(countBy(tiem,'Tiempos')), {color:'var(--orange)'});
+  hbars('hbTigo', toItems(countBy(F.filter(r=>r.EstadoTigo),'EstadoTigo')));
 }
 
-function resetAll(){
-  SL.resp=''; SL.op='';
-  document.querySelectorAll('#fRespGroup .sbtn, #fOpGroup .sbtn').forEach(b=>b.classList.remove('on'));
-  document.querySelectorAll('#fRespGroup .sbtn[data-resp=""], #fOpGroup .sbtn[data-op=""]').forEach(b=>b.classList.add('on'));
-  document.getElementById('fReg').value = '';
-  document.getElementById('fUr').value  = '';
-  document.getElementById('fSrch').value = '';
-  page = 1; applyF();
+/* ═════════════════════════════════════════════════════════════
+   3. COMERCIALIZADORES
+   ═════════════════════════════════════════════════════════════ */
+const COM_COLS = [
+  {k:'name', t:'Comercializador'}, {k:'n', t:'Sitios', num:1}, {k:'az', t:'Azimut', num:1},
+  {k:'e', t:'Ejecutados', num:1}, {k:'av', t:'Avance Azimut', num:1}, {k:'vpm', t:'Valor prom. mensual', num:1},
+  {k:'log', t:'Ahorro logrado mensual', num:1}, {k:'acum', t:'Ahorro acumulado', num:1},
+  {k:'dias', t:'Días prom. cancelación', num:1}
+];
+function renderComercial(){
+  const m = {};
+  filtered.forEach(r=>{
+    const k = r.Comercializador || '(sin dato)';
+    const o = m[k] = m[k] || {name:k,n:0,az:0,azE:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0};
+    o.n++; o.vpm += r.VPM; o.acum += r.Acumulado;
+    const ej = isEjec(r.Gestion);
+    if(ej){ o.e++; o.log += r.VPM; if(r.Dias!=null){ o.dS+=r.Dias; o.dN++; } }
+    if(isAz(r)){ o.az++; if(ej) o.azE++; }
+  });
+  const arr = Object.values(m).map(o=>({...o, av: o.az? o.azE/o.az : -1, dias: o.dN? o.dS/o.dN : -1}));
+  const {k,d} = comSort;
+  arr.sort((a,b)=> k==='name' ? d*a.name.localeCompare(b.name,'es') : d*(a[k]-b[k]));
+  document.getElementById('comCnt').textContent = fmtN(arr.length);
+  document.getElementById('comHead').innerHTML = '<tr>'+COM_COLS.map(c=>
+    `<th class="sort ${c.num?'num':''} ${k===c.k?'sorted':''}" data-k="${c.k}">${c.t}<span class="arr">${k===c.k?(d>0?'▲':'▼'):'↕'}</span></th>`).join('')+'</tr>';
+  document.querySelectorAll('#comHead th').forEach(th=> th.addEventListener('click', ()=>{
+    const nk = th.dataset.k; comSort = {k:nk, d: comSort.k===nk ? -comSort.d : (nk==='name'?1:-1)}; renderComercial();
+  }));
+  const T = arr.reduce((s,o)=>({n:s.n+o.n,az:s.az+o.az,azE:s.azE+o.azE,e:s.e+o.e,vpm:s.vpm+o.vpm,log:s.log+o.log,acum:s.acum+o.acum,dS:s.dS+o.dS,dN:s.dN+o.dN}),{n:0,az:0,azE:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0});
+  const avCell = (a,b)=> b? `<div class="avb"><div class="t"><div class="f" style="width:${a/b*100}%"></div></div><span>${pct(a,b,0)}</span></div>` : '<span style="color:var(--text-dim)">—</span>';
+  const body = document.getElementById('comBody');
+  body.innerHTML = arr.map(o=>`<tr class="click" data-c="${escAttr(o.name)}">
+      <td>${escHtml(o.name)}</td><td class="num">${fmtN(o.n)}</td><td class="num">${fmtN(o.az)}</td><td class="num">${fmtN(o.e)}</td>
+      <td>${avCell(o.azE,o.az)}</td><td class="num">${cop(o.vpm)}</td><td class="num">${cop(o.log)}</td><td class="num">${cop(o.acum)}</td>
+      <td class="num" title="${o.dN} sitios con dato">${o.dN? Math.round(o.dias)+' días' : '—'}</td></tr>`).join('')
+    + `<tr style="background:rgba(0,180,216,.08)"><td><strong>Total</strong></td><td class="num">${fmtN(T.n)}</td><td class="num">${fmtN(T.az)}</td><td class="num">${fmtN(T.e)}</td>
+      <td>${avCell(T.azE,T.az)}</td><td class="num">${cop(T.vpm)}</td><td class="num">${cop(T.log)}</td><td class="num">${cop(T.acum)}</td>
+      <td class="num">${T.dN? Math.round(T.dS/T.dN)+' días':'—'}</td></tr>`;
+  body.querySelectorAll('tr[data-c]').forEach(tr=> tr.addEventListener('click', ()=>{ if(!tr.dataset.c.startsWith('(')) setSelect('fCom', tr.dataset.c); }));
+  document.getElementById('comNote').textContent =
+    'Días prom. cancelación: promedio de “Dias para la cancelacion” en sitios con Gestión = Ejecutado, considerando solo valores entre '+(DIAS_MIN+1)+' y '+DIAS_MAX+' días (se descartan valores atípicos que vienen de fechas vacías). Avance Azimut = ejecutados ÷ sitios del grupo Azimut.';
 }
 
-/* ── Tabla detalle ───────────────────────────────────────────── */
+/* ═════════════════════════════════════════════════════════════
+   4. FACTURACIÓN MENSUAL
+   ═════════════════════════════════════════════════════════════ */
+function renderFactura(){
+  document.getElementById('fcN').textContent = CONS.length;
+  const chart = document.getElementById('fcChart'), body = document.getElementById('fcBody');
+  if(!CONS.length){
+    chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No se encontraron columnas “Consolidado &lt;mes&gt; &lt;año&gt;” en la hoja.</div>';
+    body.innerHTML=''; return;
+  }
+  const M = CONS.map((c,j)=>{
+    let az=0, ur=0, pos=0;
+    filtered.forEach(r=>{ const v=r.Cons[j]; if(isAz(r)) az+=v; else ur+=v; if(v>0) pos++; });
+    return {...c, az, ur, tot:az+ur, pos};
+  });
+  const max = Math.max(1, ...M.map(m=>m.tot));
+  const H = 230;
+  chart.innerHTML = M.map(m=>{
+    const ha = Math.max(0, m.az/max*H), hu = Math.max(0, m.ur/max*H);
+    const tip = `<b>${escHtml(m.label)}</b><br>Total: ${cop(m.tot)}<br>Azimut: ${cop(m.az)}<br>Millicom: ${cop(m.ur)}<br>${fmtN(m.pos)} sitios con valor &gt; 0`;
+    return `<div class="cc-col cc-hit" data-tip="${escAttr(tip)}">
+      <div class="cc-stack" style="height:${ha+hu+2}px">
+        <span class="cc-top">${cop(m.tot)}</span>
+        <div class="seg-az" style="height:${ha}px"></div>
+        <div class="seg-ur" style="height:${hu}px"></div>
+      </div>
+      <div class="cc-lbl">${escHtml(m.short)}</div></div>`;
+  }).join('');
+  body.innerHTML = M.map((m,i)=>{
+    let dv = '—';
+    if(i>0 && M[i-1].tot){ const d=(m.tot-M[i-1].tot)/M[i-1].tot*100; dv = `<span class="${d>0?'delta-up':'delta-dn'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(1).replace('.',',')}%</span>`; }
+    return `<tr><td style="text-transform:capitalize">${escHtml(m.label)}</td><td class="num">${cop(m.tot)}</td><td class="num">${cop(m.az)}</td><td class="num">${cop(m.ur)}</td><td class="num">${dv}</td><td class="num">${fmtN(m.pos)}</td></tr>`;
+  }).join('');
+  const f = M[0], l = M[M.length-1];
+  document.getElementById('fcFirstL').textContent = 'Primer mes · '+f.short;
+  document.getElementById('fcLastL').textContent = 'Último mes · '+l.short;
+  document.getElementById('fcFirst').textContent = cop(f.tot);
+  document.getElementById('fcLast').textContent = cop(l.tot);
+  const dv = f.tot ? (l.tot-f.tot)/f.tot*100 : 0;
+  const ve = document.getElementById('fcVar');
+  ve.textContent = (dv>0?'+':'')+dv.toFixed(1).replace('.',',')+'%';
+  ve.style.color = dv>0 ? 'var(--red)' : 'var(--green)';
+  document.getElementById('fcVarS').textContent = (l.tot-f.tot>0?'+':'')+cop(l.tot-f.tot)+' entre '+f.short+' y '+l.short;
+  const zero = filtered.filter(r=> r.Cons[r.Cons.length-1]<=0).length;
+  document.getElementById('fcZero').textContent = fmtN(zero);
+  document.getElementById('fcZeroS').textContent = pct(zero, filtered.length)+' de los sitios filtrados';
+}
+
+/* ═════════════════════════════════════════════════════════════
+   5. EVOLUCIÓN EJECUTADOS
+   ═════════════════════════════════════════════════════════════ */
+function renderEvolucion(){
+  const withDate = filtered.filter(r => r.FechaGestion);
+  document.getElementById('eCnt').textContent = fmtN(withDate.length);
+  const mm = {};
+  withDate.forEach(r=>{
+    const d=r.FechaGestion, k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    mm[k] = mm[k] || {g:0,a:0};
+    if(isEjec(r.Gestion)) mm[k].g++;
+    if(isEjec(r.GestionActas)) mm[k].a++;
+  });
+  const keys = Object.keys(mm).sort();
+  const totG = filtered.filter(r=>isEjec(r.Gestion)).length, totA = filtered.filter(r=>isEjec(r.GestionActas)).length;
+  document.getElementById('eGlobalB').innerHTML =
+    `<tr><td>Gestión</td><td>${fmtN(totG)}</td></tr><tr><td>Gestión Actas</td><td>${fmtN(totA)}</td></tr>
+     <tr><td>Ejecutados sin Fecha de Gestión</td><td>${fmtN(filtered.filter(r=>isEjec(r.Gestion)&&!r.FechaGestion).length)}</td></tr>
+     <tr class="tot"><td>Sitios en gestión Azimut</td><td>${fmtN(filtered.filter(isAz).length)}</td></tr>`;
+  const chart = document.getElementById('evoChart');
+  if(!keys.length){
+    chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No hay sitios con Fecha de Gestión para los filtros seleccionados.</div>';
+    document.getElementById('eCumB').innerHTML=''; return;
+  }
+  const maxV = Math.max(1, ...keys.map(k=>Math.max(mm[k].g, mm[k].a)));
+  const lab = k => { const [y,m]=k.split('-'); return MES_CORTO[+m-1]+' '+y; };
+  chart.innerHTML = keys.map(k=>{
+    const g=mm[k].g, a=mm[k].a;
+    return `<div class="evo-col" data-tip="${escAttr('<b>'+lab(k)+'</b><br>Gestión ejecutado: '+g+'<br>Gestión Actas ejecutado: '+a)}">
+      <div class="evo-bars">
+        <div class="evo-bar evo-bar-g" style="height:${Math.max(2,Math.round(g/maxV*220))}px"><span class="evo-bar-val">${g}</span></div>
+        <div class="evo-bar evo-bar-a" style="height:${Math.max(2,Math.round(a/maxV*220))}px"><span class="evo-bar-val">${a}</span></div>
+      </div><div class="evo-month">${lab(k)}</div></div>`;
+  }).join('');
+  let c = 0;
+  document.getElementById('eCumB').innerHTML = keys.map(k=>{ c += mm[k].g; return `<tr><td>${lab(k)}</td><td>${fmtN(mm[k].g)}</td><td>${fmtN(c)}</td></tr>`; }).join('');
+}
+
+/* ═════════════════════════════════════════════════════════════
+   6. DETALLE MILLICOM
+   ═════════════════════════════════════════════════════════════ */
+function renderMillicom(){
+  const rows = filtered.filter(r=>!isAz(r));
+  document.getElementById('mCnt').textContent = fmtN(rows.length);
+  const tmp = document.createElement('table');
+  pivot(tmp, rows, 'UniRed', 'Estado', 'n', UR_ORDER);
+  document.getElementById('mThead').innerHTML = tmp.tHead ? tmp.tHead.innerHTML : '';
+  document.getElementById('mB').innerHTML = tmp.tBodies[0] ? tmp.tBodies[0].innerHTML : '';
+}
+
+/* ═════════════════════════════════════════════════════════════
+   7. DETALLE DE SITIOS
+   ═════════════════════════════════════════════════════════════ */
 function bUR(v){
-  const m = {'Cancelar':'bc','Devolver':'bd','Ceder':'bc',
-    'Pendiente Autorizacion Cancelacion':'bp','Permanece':'br','No Cedido':'bn'};
+  const m = {'Cancelar':'bc','Devolver':'bd','Devuelta':'bd','Ceder':'bc','Pendiente Autorizacion Cancelacion':'bp','Permanece':'br','No Cedido':'bn','Cuenta en tercero':'bn'};
   return `<span class="b ${m[v]||'bn'}">${escHtml(v)||'—'}</span>`;
 }
-function bOP(v){
-  return `<span class="b ${v==='TEM'?'bt':'bg2'}">${escHtml(v)||'—'}</span>`;
+function bOP(v){ return `<span class="b ${v==='TEM'?'bt':'bg2'}">${escHtml(v)||'—'}</span>`; }
+const DET_COLS = [
+  {k:'Site',t:'Site'}, {k:'NIC',t:'NIC'}, {k:'Nombre',t:'Nombre del Sitio'}, {k:'Operator',t:'Operador'},
+  {k:'Region',t:'Región'}, {k:'Tower',t:'TOWER CO'}, {k:'UniRed',t:'UniRed'}, {k:'Estado',t:'Estado Azimut'},
+  {k:'Gestion',t:'Gestión'}, {k:'Categoria',t:'Categoría'}, {k:'FechaGestion',t:'Fecha Gestión'},
+  {k:'VPM',t:'Valor prom. mensual',num:1}, {k:'Comercializador',t:'Comercializador'}, {k:'Responsable',t:'Responsable'}
+];
+function buildDetailHead(){
+  const th = document.getElementById('tH');
+  th.innerHTML = '<tr>'+DET_COLS.map(c=>`<th class="sort ${c.num?'num':''}" data-k="${c.k}">${c.t}<span class="arr">↕</span></th>`).join('')+'</tr>';
+  th.querySelectorAll('th').forEach(h=> h.addEventListener('click', ()=>{
+    const k = h.dataset.k;
+    sortDir = sortKey===k ? -sortDir : 1; sortKey = k;
+    th.querySelectorAll('th').forEach(x=>{ x.classList.toggle('sorted', x===h); x.querySelector('.arr').textContent = x===h ? (sortDir>0?'▲':'▼') : '↕'; });
+    page = 1; renderTable(); renderPag();
+  }));
 }
+function sortedRows(){
+  if(!sortKey) return filtered;
+  const k = sortKey;
+  return [...filtered].sort((a,b)=>{
+    let x=a[k], y=b[k];
+    if(x instanceof Date || y instanceof Date){ x = x? x.getTime() : -Infinity; y = y? y.getTime() : -Infinity; return sortDir*(x-y); }
+    if(typeof x==='number') return sortDir*(x-y);
+    x = x||''; y = y||'';
+    if(!x && y) return 1; if(x && !y) return -1;
+    return sortDir*String(x).localeCompare(String(y),'es',{numeric:true});
+  });
+}
+let pageRows = [];
 function renderTable(){
-  const sl = filtered.slice((page-1)*PG, page*PG);
-  document.getElementById('tB').innerHTML = sl.length
-    ? sl.map(r=>`<tr>
+  document.getElementById('tCnt').textContent = fmtN(filtered.length);
+  pageRows = sortedRows().slice((page-1)*PG, page*PG);
+  const tb = document.getElementById('tB');
+  tb.innerHTML = pageRows.length
+    ? pageRows.map((r,i)=>`<tr class="click" data-i="${i}">
         <td>${escHtml(r.Site)||'—'}</td>
         <td style="font-family:monospace;font-size:11px;color:var(--cyan)">${escHtml(r.NIC)||'—'}</td>
-        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${escAttr(r.Nombre_Sitio)}">${escHtml(r.Nombre_Sitio)||'—'}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${escAttr(r.Nombre)}">${escHtml(r.Nombre)||'—'}</td>
         <td>${bOP(r.Operator)}</td>
-        <td style="color:var(--text-dim)">${r.Region && r.Region!=='0' ? escHtml(r.Region) : '—'}</td>
+        <td style="color:var(--text-dim)">${escHtml(r.Region)||'—'}</td>
+        <td style="font-size:11px">${escHtml(r.Tower)||'—'}</td>
         <td>${bUR(r.UniRed)}</td>
-        <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis" title="${escAttr(r.Estado_Azimut)}">${escHtml(r.Estado_Azimut)||'—'}</td>
+        <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis" title="${escAttr(r.Estado)}">${escHtml(r.Estado)||'—'}</td>
         <td>${escHtml(r.Gestion)||'—'}</td>
+        <td style="font-size:11px">${escHtml(r.Categoria)||'—'}</td>
+        <td style="font-family:monospace;font-size:11px">${fmtDate(r.FechaGestion)||'—'}</td>
+        <td class="num">${cop(r.VPM)}</td>
         <td style="color:var(--text-dim);font-size:11px">${escHtml(r.Comercializador)||'—'}</td>
         <td style="color:var(--text-dim);font-size:11px">${escHtml(r.Responsable)||'—'}</td>
       </tr>`).join('')
-    : '<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--text-dim)">Sin resultados para los filtros seleccionados.</td></tr>';
+    : `<tr><td colspan="${DET_COLS.length}" style="text-align:center;padding:32px;color:var(--text-dim)">Sin resultados para los filtros seleccionados.</td></tr>`;
+  tb.querySelectorAll('tr[data-i]').forEach(tr=> tr.addEventListener('click', ()=> openDrawer(pageRows[+tr.dataset.i])));
 }
-
 function renderPag(){
   const pages = Math.max(1, Math.ceil(filtered.length/PG));
+  if(page>pages) page = pages;
   const el = document.getElementById('pgN');
   if(pages<=1){ el.innerHTML=''; return; }
   let h = `<button class="pg" ${page<=1?'disabled':''} data-p="${page-1}">‹</button>`;
@@ -1068,231 +1622,123 @@ function renderPag(){
     if(i===1 || i===pages || Math.abs(i-page)<=2) range.push(i);
     else if(range[range.length-1] !== '…') range.push('…');
   }
-  range.forEach(i=>{
-    if(i==='…') h += `<span style="color:var(--text-dim);padding:0 3px">…</span>`;
-    else h += `<button class="pg ${i===page?'on':''}" data-p="${i}">${i}</button>`;
-  });
-  h += `<button class="pg" ${page>=pages?'disabled':''} data-p="${page+1}">›</button>
-        <span class="pg-i">Pág.${page}/${pages}</span>`;
+  range.forEach(i=>{ h += i==='…' ? `<span style="color:var(--text-dim);padding:0 3px">…</span>` : `<button class="pg ${i===page?'on':''}" data-p="${i}">${i}</button>`; });
+  h += `<button class="pg" ${page>=pages?'disabled':''} data-p="${page+1}">›</button><span class="pg-i">Pág. ${page}/${pages}</span>`;
   el.innerHTML = h;
   el.querySelectorAll('.pg[data-p]').forEach(b=>{
     if(b.disabled) return;
-    b.addEventListener('click', ()=>{
-      page = parseInt(b.getAttribute('data-p'),10);
-      renderTable(); renderPag();
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
+    b.addEventListener('click', ()=>{ page = parseInt(b.dataset.p,10); renderTable(); renderPag(); });
   });
 }
 
-/* ── Utilidades ──────────────────────────────────────────────── */
-function fmtMill(v){
-  if(!v) return '$ 0.00 mill.';
-  return '$ '+(v/1e6).toLocaleString('es-CO',{minimumFractionDigits:2, maximumFractionDigits:2})+' mill.';
+/* ── Ficha completa del sitio (todas las columnas de la hoja) ── */
+const SECCIONES = [
+  ['Identificación', ['Operador','Pair Site (Offgrid) Emplazamiento','NIC','Nombre del Sitio','Nombre soporte','Comercializador','Titular','Región','Responsable de la cuenta','medidor']],
+  ['Estado y gestión Azimut', ['Responsabilidad','UniRed','Estado Azimut','Categoria','Gestión','Gestión Actas','Comentario','comentario2','Radicado','Inicio de Gestion','Fecha de Gestión','Fecha Solicitud','Fecha de solicitud','Fecha de recepcion','Dias para la cancelacion','Tiempos de atencion','Seguimiento','Fecha unired']],
+  ['Desmonte y red', ['RAN','Fecha OFF RAN','TX','Fecha OFF TX','TOWER CO','AUTORIZADO DESMONTE','MNO SE QUEDA CON MW EN SITIO','AUTORIZACION CANCELACION CUENTA ENERGIA|PLANEACION','AUTORIZACION CANCELACION CUENTA ENERGIA|AREA CONTRATOS','SITIO DESMONTADO, CON ACTA DE ENTREGA','sin demsonte','Año estimado desmonte','Mes Estimado Desmonte','Fecha Propuesta Apagado','Priorización Sitios','SITIOS CON BARTER','GRID RED ÚNICA V6_4_6','GRID RED ÚNICA V6_4_7','Estado Haydiver','estado tigo','sitios GOLDEN','Ceder ATC']],
+  ['Valores', ['Valor promedio mensual','Energía','Alumbrado Público','Valor No cedido','Calculo Mes','Meses con ahorro','Valor Ahorro Acumulado','valor ultimo mes TIGO']]
+];
+const MONEY_COLS = ['valor promedio mensual','energia','alumbrado publico','valor no cedido','valor ahorro acumulado','valor ultimo mes tigo','ceder atc'];
+function fmtCell(h, v){
+  if(v==null) return '';
+  if(v instanceof Date){ if(v.getFullYear()<2000) return ''; return fmtDate(v); }
+  if(typeof v==='number'){
+    const nh = norm(h);
+    if(MONEY_COLS.includes(nh) || /^consolidado /.test(nh)) return v ? '$ '+Math.round(v).toLocaleString('es-CO') : '$ 0';
+    if(/dias/.test(nh) && (v<DIAS_MIN || v>DIAS_MAX)) return v.toLocaleString('es-CO')+' (atípico)';
+    return Number.isInteger(v) ? (Math.abs(v)>=10000 && /año/.test(h)===false ? v.toLocaleString('es-CO') : String(v)) : v.toLocaleString('es-CO',{maximumFractionDigits:2});
+  }
+  const s = String(v).trim();
+  return s;
 }
-function cop(v){
-  if(!v) return '—';
-  if(v>=1e9) return '$ '+(v/1e9).toLocaleString('es-CO',{minimumFractionDigits:2})+'MM';
-  if(v>=1e6) return '$ '+(v/1e6).toLocaleString('es-CO',{minimumFractionDigits:2})+'M';
-  return '$ '+v.toLocaleString('es-CO',{minimumFractionDigits:0});
+function openDrawer(r){
+  if(!r) return;
+  document.getElementById('drwT').textContent = (r.Site||'—') + (r.Nombre ? ' · '+r.Nombre : '');
+  document.getElementById('drwS').textContent = 'NIC '+(r.NIC||'—')+' · '+(r.UniRed||'—')+' · '+(r.Estado||'—');
+  const used = new Set(); let empty = 0;
+  const kv = (h,i)=>{ used.add(i); const val = fmtCell(h, r.raw[i]); if(!val || val==='0'){ empty++; return ''; }
+    return `<div class="kv" data-s="${escAttr(norm(h+' '+val))}"><div class="k">${escHtml(h)}</div><div class="v">${escHtml(val)}</div></div>`; };
+  let html = '';
+  SECCIONES.forEach(([sec, cols])=>{
+    const items = cols.map(c=>{ const i = HEADERS.findIndex(h=>norm(h)===norm(c)); return i>=0 ? kv(HEADERS[i], i) : ''; }).join('');
+    if(items) html += `<div class="drw-sec">${sec}</div>${items}`;
+  });
+  if(CONS.length){
+    html += `<div class="drw-sec">Facturación mensual (Consolidados)</div>` + CONS.map(c=>{ used.add(c.i);
+      return `<div class="kv" data-s="${escAttr(norm(c.label))}"><div class="k" style="text-transform:capitalize">${escHtml(c.label)}</div><div class="v">${fmtCell(HEADERS[c.i], r.raw[c.i])||'$ 0'}</div></div>`; }).join('');
+  }
+  const rest = HEADERS.map((h,i)=> (!used.has(i) && h) ? kv(h,i) : '').join('');
+  if(rest) html += `<div class="drw-sec">Otras columnas</div>${rest}`;
+  html += `<div class="drw-empty">${empty} campos vacíos o en 0 no se muestran.</div>`;
+  document.getElementById('drwB').innerHTML = html;
+  document.getElementById('drwSrch').value = '';
+  document.getElementById('drw').classList.add('on');
+  document.getElementById('drwBg').classList.add('on');
 }
-function escHtml(s){
-  if(s==null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(s){
-  return escHtml(s).replace(/'/g,'&#39;');
-}
+function closeDrawer(){ document.getElementById('drw').classList.remove('on'); document.getElementById('drwBg').classList.remove('on'); }
+document.getElementById('drwClose').onclick = closeDrawer;
+document.getElementById('drwBg').onclick = closeDrawer;
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
+document.getElementById('drwSrch').oninput = e=>{
+  const q = norm(e.target.value);
+  document.querySelectorAll('#drwB .kv').forEach(el=> el.style.display = !q || el.dataset.s.indexOf(q)>=0 ? '' : 'none');
+};
 
 /* ═════════════════════════════════════════════════════════════
-   BOTONES DEL HEADER: PDF + Recargar
+   TOOLTIP
+   ═════════════════════════════════════════════════════════════ */
+const tip = document.getElementById('tip');
+document.addEventListener('mousemove', e=>{
+  const t = e.target.closest && e.target.closest('[data-tip]');
+  if(!t){ tip.style.display='none'; return; }
+  tip.innerHTML = t.getAttribute('data-tip'); tip.style.display='block';
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX+14, y = e.clientY+14;
+  if(x+w > innerWidth-8) x = e.clientX-w-14;
+  if(y+h > innerHeight-8) y = e.clientY-h-14;
+  tip.style.left = x+'px'; tip.style.top = y+'px';
+});
+
+/* ═════════════════════════════════════════════════════════════
+   BOTONES DEL HEADER
    ═════════════════════════════════════════════════════════════ */
 document.getElementById('btnReload').addEventListener('click', ()=>{
   document.getElementById('dashboardView').style.display = 'none';
   document.getElementById('uploadView').style.display = 'flex';
-  document.getElementById('fileInput').value = '';
-  clearStatus();
+  fi.value = ''; clearStatus(); closeDrawer();
   DATA = []; filtered = [];
 });
 
-/* ── Hoja 2: Detalle Millicom (tabla dinámica UniRed × Estado Azimut) ── */
-function renderMillicomDetail(){
-  const rows = filtered.filter(r => !isAzimut(r.UniRed));
-  document.getElementById('mCnt').textContent = rows.length.toLocaleString('es-CO');
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const yy = now.getFullYear();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mn = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('mDate').textContent = dd+'/'+mm+'/'+yy+' '+hh+':'+mn;
-
-  /* Filas = UniRed (orden fijo conocido primero), Columnas = Estado Azimut */
-  const urOrderD = ['Pendiente Autorizacion Cancelacion','Permanece','No Cedido','Pendiente Acta desmonte'];
-  const unireds = [...new Set(rows.map(r=> r.UniRed || '(sin UniRed)'))].sort((a,b)=>{
-    const ia = urOrderD.indexOf(a), ib = urOrderD.indexOf(b);
-    if(ia===-1 && ib===-1) return a.localeCompare(b);
-    if(ia===-1) return 1; if(ib===-1) return -1;
-    return ia-ib;
-  });
-  const estados = [...new Set(rows.map(r=> r.Estado_Azimut || '(sin estado)'))].sort();
-
-  const pivot = {};
-  unireds.forEach(u=> pivot[u] = {});
-  rows.forEach(r=>{
-    const u = r.UniRed || '(sin UniRed)';
-    const e = r.Estado_Azimut || '(sin estado)';
-    pivot[u][e] = (pivot[u][e]||0) + 1;
-  });
-
-  /* Encabezado dinámico */
-  document.getElementById('mThead').innerHTML =
-    '<tr><th>UniRed</th>' +
-    estados.map(e=>`<th style="text-align:right">${escHtml(e)}</th>`).join('') +
-    '<th style="text-align:right">Total</th></tr>';
-
-  if(!unireds.length || !estados.length){
-    document.getElementById('mB').innerHTML =
-      `<tr><td colspan="${estados.length+2 || 2}" style="text-align:center;padding:32px;color:var(--text-dim)">Sin resultados para los filtros seleccionados.</td></tr>`;
-    return;
-  }
-
-  /* Filas del cuerpo + acumulación de totales por columna */
-  const colTot = {}; estados.forEach(e=> colTot[e]=0);
-  let grand = 0;
-  const bodyRows = unireds.map(u=>{
-    let rowTot = 0;
-    const cells = estados.map(e=>{
-      const c = pivot[u][e] || 0;
-      rowTot += c; colTot[e] += c;
-      return `<td style="text-align:right;font-family:monospace">${c ? c.toLocaleString('es-CO') : '—'}</td>`;
-    }).join('');
-    grand += rowTot;
-    return `<tr><td>${bUR(u)}</td>${cells}<td style="text-align:right;font-family:monospace;font-weight:700;color:var(--white)">${rowTot.toLocaleString('es-CO')}</td></tr>`;
-  }).join('');
-
-  const totalRow =
-    `<tr class="tot"><td>Total</td>` +
-    estados.map(e=>`<td style="text-align:right;font-family:monospace">${colTot[e].toLocaleString('es-CO')}</td>`).join('') +
-    `<td style="text-align:right;font-family:monospace">${grand.toLocaleString('es-CO')}</td></tr>`;
-
-  document.getElementById('mB').innerHTML = bodyRows + totalRow;
-}
-
-document.getElementById('btnMillicomDetail').addEventListener('click', ()=>{
-  renderMillicomDetail();
-  document.getElementById('dashboardView').style.display = 'none';
-  document.getElementById('millicomView').style.display = 'block';
-  window.scrollTo({top:0});
-});
-document.getElementById('btnBackMillicom').addEventListener('click', ()=>{
-  document.getElementById('millicomView').style.display = 'none';
-  document.getElementById('dashboardView').style.display = 'block';
-  window.scrollTo({top:0});
-});
-
-/* ── Hoja 3: Evolución mensual de ejecutados (Fecha de Gestión) ──── */
-const MESES_ES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-function renderEvolucionMensual(){
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const yy = now.getFullYear();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mn = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('eDate').textContent = dd+'/'+mm+'/'+yy+' '+hh+':'+mn;
-
-  /* Solo sitios con Fecha de Gestión válida */
-  const withDate = filtered.filter(r => r.FechaGestion instanceof Date && !isNaN(r.FechaGestion));
-  document.getElementById('eCnt').textContent = withDate.length.toLocaleString('es-CO');
-
-  const monthMap = {}; // 'YYYY-MM' -> {gestion:0, actas:0}
-  withDate.forEach(r=>{
-    const d = r.FechaGestion;
-    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
-    if(!monthMap[key]) monthMap[key] = { gestion:0, actas:0 };
-    if(/ejecutado/i.test(r.Gestion)) monthMap[key].gestion += 1;
-    if(/ejecutado/i.test(r.GestionActas)) monthMap[key].actas += 1;
-  });
-
-  const keys = Object.keys(monthMap).sort();
-  const chart = document.getElementById('evoChart');
-
-  /* Total global de "Ejecutado" por columna — sobre TODOS los sitios filtrados,
-     tengan o no Fecha de Gestión diligenciada */
-  const totGestion = filtered.filter(r => /ejecutado/i.test(r.Gestion)).length;
-  const totActas   = filtered.filter(r => /ejecutado/i.test(r.GestionActas)).length;
-  const totAzimut  = filtered.filter(r => isAzimut(r.UniRed)).length;
-  document.getElementById('eGlobalB').innerHTML = `
-    <tr><td>Gestión</td><td>${totGestion.toLocaleString('es-CO')}</td></tr>
-    <tr><td>Gestión Actas</td><td>${totActas.toLocaleString('es-CO')}</td></tr>
-    <tr class="tot"><td>Sitios en gestión Azimut</td><td>${totAzimut.toLocaleString('es-CO')}</td></tr>
-  `;
-
-  if(!keys.length){
-    chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No hay sitios con Fecha de Gestión para los filtros seleccionados.</div>';
-    return;
-  }
-
-  const maxVal = Math.max(1, ...keys.map(k => Math.max(monthMap[k].gestion, monthMap[k].actas)));
-  const MAX_PX = 220;
-
-  chart.innerHTML = keys.map(k=>{
-    const [y,m] = k.split('-');
-    const label = MESES_ES[parseInt(m,10)-1] + ' ' + y;
-    const g = monthMap[k].gestion, a = monthMap[k].actas;
-    const hg = Math.max(2, Math.round((g/maxVal) * MAX_PX));
-    const ha = Math.max(2, Math.round((a/maxVal) * MAX_PX));
-    return `<div class="evo-col">
-      <div class="evo-bars">
-        <div class="evo-bar evo-bar-g" style="height:${hg}px"><span class="evo-bar-val">${g}</span></div>
-        <div class="evo-bar evo-bar-a" style="height:${ha}px"><span class="evo-bar-val">${a}</span></div>
-      </div>
-      <div class="evo-month">${label}</div>
-    </div>`;
-  }).join('');
-}
-
-document.getElementById('btnEvolucion').addEventListener('click', ()=>{
-  renderEvolucionMensual();
-  document.getElementById('dashboardView').style.display = 'none';
-  document.getElementById('evolucionView').style.display = 'block';
-  window.scrollTo({top:0});
-});
-document.getElementById('btnBackEvolucion').addEventListener('click', ()=>{
-  document.getElementById('evolucionView').style.display = 'none';
-  document.getElementById('dashboardView').style.display = 'block';
-  window.scrollTo({top:0});
+document.getElementById('btnXlsx').addEventListener('click', ()=>{
+  if(PREVIEW){ toast('En la vista previa las descargas están bloqueadas. En la versión publicada en GitHub/Render este botón descarga el Excel filtrado.'); return; }
+  const aoa = [HEADERS].concat(sortedRows().map(r=> HEADERS.map((h,i)=> r.raw[i]==null ? '' : r.raw[i])));
+  const ws = XLSX.utils.aoa_to_sheet(aoa, {cellDates:true});
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Filtrado');
+  const n = new Date();
+  XLSX.writeFile(wb, 'Consolidado_Apagados_filtrado_'+n.getFullYear()+String(n.getMonth()+1).padStart(2,'0')+String(n.getDate()).padStart(2,'0')+'.xlsx');
 });
 
 document.getElementById('btnPdf').addEventListener('click', ()=>{
+  if(PREVIEW){ toast('En la vista previa las descargas están bloqueadas. En la versión publicada en GitHub/Render este botón genera el PDF.'); return; }
+  if(typeof html2pdf === 'undefined'){ toast('No se pudo cargar la librería de PDF. Revisa tu conexión.'); return; }
   const btn = document.getElementById('btnPdf');
   btn.disabled = true; const txt = btn.innerHTML;
   btn.innerHTML = '<span class="spinner"></span> Generando…';
   document.body.classList.add('pdf-mode');
-
-  const target = document.getElementById('dashboardView');
-  const now = new Date();
-  const fname = 'Dashboard_Apagados_Azimut_' +
-    now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '.pdf';
-
-  const opt = {
-    margin: 8,
-    filename: fname,
+  const n = new Date();
+  const fname = 'Dashboard_Apagados_'+curTab+'_'+n.getFullYear()+String(n.getMonth()+1).padStart(2,'0')+String(n.getDate()).padStart(2,'0')+'.pdf';
+  html2pdf().set({
+    margin: 8, filename: fname,
     image: { type:'jpeg', quality:0.95 },
-    html2canvas: { scale:2, backgroundColor:'#0D1B2A', useCORS:true, logging:false },
+    html2canvas: { scale:2, backgroundColor:getComputedStyle(document.body).backgroundColor, useCORS:true, logging:false },
     jsPDF: { unit:'mm', format:'a3', orientation:'landscape' },
     pagebreak: { mode:['css','legacy'] }
-  };
-
-  html2pdf().set(opt).from(target).save().then(()=>{
-    document.body.classList.remove('pdf-mode');
-    btn.disabled = false; btn.innerHTML = txt;
+  }).from(document.getElementById('dashboardView')).save().then(()=>{
+    document.body.classList.remove('pdf-mode'); btn.disabled=false; btn.innerHTML=txt;
   }).catch(err=>{
-    console.error(err);
-    document.body.classList.remove('pdf-mode');
-    btn.disabled = false; btn.innerHTML = txt;
-    alert('Error generando el PDF: '+err.message);
+    console.error(err); document.body.classList.remove('pdf-mode'); btn.disabled=false; btn.innerHTML=txt;
+    toast('Error generando el PDF: '+err.message);
   });
 });
 </script>
