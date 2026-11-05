@@ -490,6 +490,16 @@ html,body{background:var(--bg);color:var(--text);}
 .toast.on{display:block;animation:fadeIn .2s ease;}
 @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
 
+/* Evolución: tercera serie (actas sin soporte) */
+:root{--purple:#B57BFF;}
+:root[data-az="light"]{--purple:#8A4FE0;}
+.evo-dot-s{background:var(--purple);}
+.evo-bar-s{background:linear-gradient(180deg, var(--purple), color-mix(in srgb, var(--purple) 75%, #000));}
+.evo-bars{gap:4px;}
+.evo-bar{width:18px;}
+.evo-col{min-width:78px;}
+.evo-legend{flex-wrap:wrap;gap:10px 22px;}
+
 </style>
 </head>
 <body>
@@ -796,7 +806,8 @@ html,body{background:var(--bg);color:var(--text);}
     </div>
     <div class="evo-legend">
       <span class="evo-lg"><span class="evo-dot evo-dot-g"></span> Gestión = Ejecutado</span>
-      <span class="evo-lg"><span class="evo-dot evo-dot-a"></span> Gestión Actas = Ejecutado</span>
+      <span class="evo-lg"><span class="evo-dot evo-dot-a"></span> Gestión Actas = Ejecutado (con soporte)</span>
+      <span class="evo-lg"><span class="evo-dot evo-dot-s"></span> Gestión Actas = Ejecutado sin soporte</span>
     </div>
     <div class="evo-chart" id="evoChart"></div>
   </div>
@@ -804,7 +815,7 @@ html,body{background:var(--bg);color:var(--text);}
     <div class="tw">
       <div class="ttb"><div class="ttb-t">Total global — Ejecutados</div></div>
       <table class="st">
-        <thead><tr><th>Columna</th><th>Ejecutados</th></tr></thead>
+        <thead><tr><th>Columna</th><th>Sitios</th></tr></thead>
         <tbody id="eGlobalB"></tbody>
       </table>
     </div>
@@ -812,10 +823,22 @@ html,body{background:var(--bg);color:var(--text);}
       <div class="ttb"><div class="ttb-t">Acumulado por mes</div></div>
       <div class="pscroll" style="max-height:300px">
         <table class="st">
-          <thead><tr><th>Mes</th><th>Ejecutados mes</th><th>Acumulado</th></tr></thead>
+          <thead><tr><th>Mes</th><th>Gestión ejecutado</th><th>Actas con soporte</th><th>Actas sin soporte</th><th>Acumulado gestión</th></tr></thead>
           <tbody id="eCumB"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Sitios con acta “Ejecutado sin soporte”</div>
+      <div class="ti"><strong id="sinCnt">0</strong> sitios · clic en una fila para ver la ficha completa</div>
+    </div>
+    <div class="tscroll" style="max-height:420px">
+      <table class="mt">
+        <thead><tr><th>Site</th><th>NIC</th><th>Nombre del Sitio</th><th>Comercializador</th><th>UniRed</th><th>Estado Azimut</th><th>Gestión</th><th>Fecha Gestión</th><th class="num">Valor prom. mensual</th></tr></thead>
+        <tbody id="sinB"></tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -985,6 +1008,12 @@ function toDate(v){
 }
 const isAz   = r => AZIMUT_GROUP.includes(r.UniRed);
 const isEjec = v => /^ejecutado/.test(norm(v));
+/* Gestión Actas: 'con' = Ejecutado (con soporte), 'sin' = Ejecutado sin soporte, '' = otro/vacío */
+function actaTipo(v){
+  const n = norm(v);
+  if(!/^ejecutado/.test(n)) return '';
+  return /sin soporte/.test(n) ? 'sin' : 'con';
+}
 
 /* ═════════════════════════════════════════════════════════════
    CARGA DEL ARCHIVO
@@ -1509,33 +1538,60 @@ function renderEvolucion(){
   const mm = {};
   withDate.forEach(r=>{
     const d=r.FechaGestion, k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    mm[k] = mm[k] || {g:0,a:0};
+    mm[k] = mm[k] || {g:0,c:0,s:0};
     if(isEjec(r.Gestion)) mm[k].g++;
-    if(isEjec(r.GestionActas)) mm[k].a++;
+    const at = actaTipo(r.GestionActas);
+    if(at==='con') mm[k].c++; else if(at==='sin') mm[k].s++;
   });
   const keys = Object.keys(mm).sort();
-  const totG = filtered.filter(r=>isEjec(r.Gestion)).length, totA = filtered.filter(r=>isEjec(r.GestionActas)).length;
+  const totG = filtered.filter(r=>isEjec(r.Gestion)).length;
+  const totC = filtered.filter(r=>actaTipo(r.GestionActas)==='con').length;
+  const totS = filtered.filter(r=>actaTipo(r.GestionActas)==='sin').length;
   document.getElementById('eGlobalB').innerHTML =
-    `<tr><td>Gestión</td><td>${fmtN(totG)}</td></tr><tr><td>Gestión Actas</td><td>${fmtN(totA)}</td></tr>
+    `<tr><td>Gestión = Ejecutado</td><td>${fmtN(totG)}</td></tr>
+     <tr><td>Gestión Actas = Ejecutado (con soporte)</td><td>${fmtN(totC)}</td></tr>
+     <tr><td>Gestión Actas = Ejecutado sin soporte</td><td style="color:var(--purple);font-weight:700">${fmtN(totS)}</td></tr>
+     <tr><td>Total Gestión Actas ejecutadas</td><td>${fmtN(totC+totS)} <span style="color:var(--text-dim)">(${pct(totS,totC+totS)} sin soporte)</span></td></tr>
      <tr><td>Ejecutados sin Fecha de Gestión</td><td>${fmtN(filtered.filter(r=>isEjec(r.Gestion)&&!r.FechaGestion).length)}</td></tr>
      <tr class="tot"><td>Sitios en gestión Azimut</td><td>${fmtN(filtered.filter(isAz).length)}</td></tr>`;
+
+  /* Tabla de sitios sin soporte */
+  const sin = filtered.filter(r=>actaTipo(r.GestionActas)==='sin')
+    .sort((a,b)=> (b.FechaGestion?b.FechaGestion.getTime():0) - (a.FechaGestion?a.FechaGestion.getTime():0));
+  document.getElementById('sinCnt').textContent = fmtN(sin.length);
+  const sb = document.getElementById('sinB');
+  sb.innerHTML = sin.length
+    ? sin.map((r,i)=>`<tr class="click" data-i="${i}">
+        <td>${escHtml(r.Site)||'—'}</td>
+        <td style="font-family:monospace;font-size:11px;color:var(--cyan)">${escHtml(r.NIC)||'—'}</td>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis" title="${escAttr(r.Nombre)}">${escHtml(r.Nombre)||'—'}</td>
+        <td style="font-size:11px">${escHtml(r.Comercializador)||'—'}</td>
+        <td>${bUR(r.UniRed)}</td>
+        <td style="font-size:11px">${escHtml(r.Estado)||'—'}</td>
+        <td>${escHtml(r.Gestion)||'—'}</td>
+        <td style="font-family:monospace;font-size:11px">${fmtDate(r.FechaGestion)||'—'}</td>
+        <td class="num">${cop(r.VPM)}</td></tr>`).join('')
+    : '<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--text-dim)">No hay sitios con acta “Ejecutado sin soporte” para los filtros seleccionados.</td></tr>';
+  sb.querySelectorAll('tr[data-i]').forEach(tr=> tr.addEventListener('click', ()=> openDrawer(sin[+tr.dataset.i])));
+
   const chart = document.getElementById('evoChart');
   if(!keys.length){
     chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No hay sitios con Fecha de Gestión para los filtros seleccionados.</div>';
     document.getElementById('eCumB').innerHTML=''; return;
   }
-  const maxV = Math.max(1, ...keys.map(k=>Math.max(mm[k].g, mm[k].a)));
+  const maxV = Math.max(1, ...keys.map(k=>Math.max(mm[k].g, mm[k].c, mm[k].s)));
   const lab = k => { const [y,m]=k.split('-'); return MES_CORTO[+m-1]+' '+y; };
+  const bar = (cls, v) => `<div class="evo-bar ${cls}" style="height:${v ? Math.max(3,Math.round(v/maxV*220)) : 2}px${v?'':';opacity:.35'}"><span class="evo-bar-val">${v}</span></div>`;
   chart.innerHTML = keys.map(k=>{
-    const g=mm[k].g, a=mm[k].a;
-    return `<div class="evo-col" data-tip="${escAttr('<b>'+lab(k)+'</b><br>Gestión ejecutado: '+g+'<br>Gestión Actas ejecutado: '+a)}">
-      <div class="evo-bars">
-        <div class="evo-bar evo-bar-g" style="height:${Math.max(2,Math.round(g/maxV*220))}px"><span class="evo-bar-val">${g}</span></div>
-        <div class="evo-bar evo-bar-a" style="height:${Math.max(2,Math.round(a/maxV*220))}px"><span class="evo-bar-val">${a}</span></div>
-      </div><div class="evo-month">${lab(k)}</div></div>`;
+    const {g,c,s} = mm[k];
+    const tip = '<b>'+lab(k)+'</b><br>Gestión ejecutado: '+g+'<br>Actas con soporte: '+c+'<br>Actas sin soporte: '+s;
+    return `<div class="evo-col" data-tip="${escAttr(tip)}">
+      <div class="evo-bars">${bar('evo-bar-g',g)}${bar('evo-bar-a',c)}${bar('evo-bar-s',s)}</div>
+      <div class="evo-month">${lab(k)}</div></div>`;
   }).join('');
-  let c = 0;
-  document.getElementById('eCumB').innerHTML = keys.map(k=>{ c += mm[k].g; return `<tr><td>${lab(k)}</td><td>${fmtN(mm[k].g)}</td><td>${fmtN(c)}</td></tr>`; }).join('');
+  let cum = 0;
+  document.getElementById('eCumB').innerHTML = keys.map(k=>{ cum += mm[k].g;
+    return `<tr><td>${lab(k)}</td><td>${fmtN(mm[k].g)}</td><td>${fmtN(mm[k].c)}</td><td style="${mm[k].s?'color:var(--purple);font-weight:700':''}">${fmtN(mm[k].s)}</td><td>${fmtN(cum)}</td></tr>`; }).join('');
 }
 
 /* ═════════════════════════════════════════════════════════════
