@@ -178,7 +178,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 .dash{padding:18px 28px;}
 
 /* ═══ KPI CARDS ══════════════════════════════════════════════ */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px;}
 .kc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;}
 .kc:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,180,216,.12);}
 .kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0;}
@@ -188,10 +188,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 .kc-av::before{background:linear-gradient(90deg,var(--cyan),var(--green));}
 .kc::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;opacity:.04;background:var(--cyan);}
 .kc-az::after{background:var(--green);}.kc-ur::after{background:var(--orange);}
+.kc-pe::before{background:var(--red);}.kc-pe::after{background:var(--red);}
+.kc-pe .kc-val{color:var(--red);}.kc-pe .kc-fin-val{color:var(--red);}
 .kc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;color:var(--text-dim);margin-bottom:8px;}
 .kc-val{font-size:40px;font-weight:800;line-height:1;margin-bottom:5px;}
 .kc-tot .kc-val{color:var(--cyan);}.kc-ur .kc-val{color:var(--orange);}
-.kc-az  .kc-val{color:var(--green);}.kc-av .kc-val{color:var(--cyan);font-size:32px;}
+.kc-az  .kc-val{color:var(--green);}.kc-av .kc-val{color:var(--cyan);}
+.kc-sub strong{color:var(--cyan);}
+.com-orig{font-size:10px;color:var(--text-dim);margin-top:2px;line-height:1.35;white-space:normal;}
+.kc-av-row{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px;padding-top:9px;border-top:1px solid var(--line, rgba(255,255,255,.07));}
+.kc-av-pct{font-size:18px;font-weight:800;color:var(--cyan);}
+.kc-av-row2{border-top:none;padding-top:0;margin-top:10px;}
+.kc-bar-fill2{background:var(--cyan);}
 .kc-sub{font-size:11px;color:var(--text-dim);}
 .kc-frac{font-size:11px;color:var(--text-dim);margin-top:4px;}
 .kc-frac strong{color:var(--cyan);}
@@ -202,8 +210,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
 .kc-fin-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.07);}
 .kc-fin-item{display:flex;flex-direction:column;gap:2px;}
 .kc-fin-right{text-align:right;}
-.kc-fin-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);}
-.kc-fin-val{font-size:12px;font-weight:700;color:var(--text);transition:color .3s;}
+.kc-fin-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);line-height:1.3;}
+.kc-fin-row{align-items:flex-end;}
+.kc-fin-right .kc-fin-lbl{white-space:nowrap;}
+.kc-fin-val{font-size:12px;font-weight:700;color:var(--text);transition:color .3s;white-space:nowrap;}
+.kc-fin-row{gap:8px;}
 .kc-ur .kc-fin-val{color:rgba(245,166,35,.85);}.kc-az .kc-fin-val{color:rgba(0,196,122,.85);}
 
 .kc-detail-btn{
@@ -214,6 +225,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
   cursor:pointer; transition:all .15s;
 }
 .kc-detail-btn:hover{background:rgba(245,166,35,.18);border-color:var(--orange);}
+.kc-detail-btn-green{background:rgba(0,196,122,.08);border-color:rgba(0,196,122,.4);color:var(--green);}
+.kc-detail-btn-green:hover{background:rgba(0,196,122,.18);border-color:var(--green);}
+.acc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;padding:16px;}
+.acc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:var(--text);transition:border-color .15s,box-shadow .15s,transform .15s;}
+.acc-card:hover{border-color:var(--green);transform:translateY(-1px);}
+.acc-card.on{border-color:var(--green);box-shadow:0 0 0 2px rgba(0,196,122,.35);}
+.acc-card .ac-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);}
+.acc-card .ac-n{font-size:28px;font-weight:800;color:var(--green);line-height:1.15;margin:4px 0 2px;}
+.acc-card .ac-s{font-size:11px;color:var(--text-dim);}
 .kc-detail-btn-cyan{background:rgba(0,180,216,.08);border-color:rgba(0,180,216,.4);color:var(--cyan);}
 .kc-detail-btn-cyan:hover{background:rgba(0,180,216,.18);border-color:var(--cyan);}
 
@@ -308,6 +328,7 @@ table.mt tbody td:first-child{color:var(--white);font-weight:600;}
 .pg-i{font-size:11px;color:var(--text-dim);margin:0 6px;}
 
 @media(max-width:1200px){.fin-row{grid-template-columns:1fr 1fr 1fr}.pct-card{display:none}}
+@media(max-width:1180px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){.btm-grid{grid-template-columns:1fr}.dash{padding:12px 14px}.hdr-actions{margin-left:8px}.hdr-btn{padding:5px 8px;font-size:10px}}
 
@@ -580,11 +601,11 @@ html,body{background:var(--bg);color:var(--text);}
 
   <nav class="tabs" id="tabs">
     <button class="tab on" data-tab="resumen">Resumen</button>
-    <button class="tab" data-tab="desmonte">Desmonte y gestión</button>
+    <button class="tab" data-tab="torreros">Torreros</button>
     <button class="tab" data-tab="comercial">Comercializadores</button>
-    <button class="tab" data-tab="factura">Facturación mensual</button>
     <button class="tab" data-tab="evolucion">Evolución ejecutados</button>
     <button class="tab" data-tab="millicom">Detalle Millicom</button>
+    <button class="tab" data-tab="azimut">Detalle Azimut</button>
     <button class="tab" data-tab="detalle">Detalle de sitios</button>
   </nav>
 </header>
@@ -602,9 +623,9 @@ html,body{background:var(--bg);color:var(--text);}
     <div class="kc kc-ur">
       <div class="kc-lbl">MILLICOM</div>
       <div class="kc-val" id="kUr">—</div>
-      <div class="kc-sub">Responsabilidad UniRed / Millicom</div>
+      <div class="kc-sub">Responsabilidad = Millicom</div>
       <div class="kc-fin-row">
-        <div class="kc-fin-item"><div class="kc-fin-lbl">VPM del grupo</div><div class="kc-fin-val" id="kUrVpm">—</div></div>
+        <div class="kc-fin-item"><div class="kc-fin-lbl">Potencial de ahorro</div><div class="kc-fin-val" id="kUrVpm">—</div></div>
         <div class="kc-fin-item kc-fin-right"><div class="kc-fin-lbl">% del total</div><div class="kc-fin-val" id="kUrPct">—</div></div>
       </div>
       <button type="button" class="kc-detail-btn" data-goto="millicom">Ver detalle →</button>
@@ -612,18 +633,32 @@ html,body{background:var(--bg);color:var(--text);}
     <div class="kc kc-az">
       <div class="kc-lbl">Azimut</div>
       <div class="kc-val" id="kAz">—</div>
-      <div class="kc-sub" id="kAzSub">Cancelar + Devolver + Ceder</div>
+      <div class="kc-sub" id="kAzSub">Responsabilidad = Azimut</div>
       <div class="kc-fin-row">
-        <div class="kc-fin-item"><div class="kc-fin-lbl">Ahorro acumulado</div><div class="kc-fin-val" id="kAzAcum">—</div></div>
+        <div class="kc-fin-item"><div class="kc-fin-lbl">Potencial de ahorro</div><div class="kc-fin-val" id="kAzAcum">—</div></div>
         <div class="kc-fin-item kc-fin-right"><div class="kc-fin-lbl">% del total</div><div class="kc-fin-val" id="kAzPct">—</div></div>
+      </div>
+      <button type="button" class="kc-detail-btn kc-detail-btn-green" data-goto="azimut">Ver detalle →</button>
+    </div>
+    <div class="kc kc-pe">
+      <div class="kc-lbl">Permanecen</div>
+      <div class="kc-val" id="kPerm">—</div>
+      <div class="kc-sub"><span class="urLbl">Acción</span> = Permanece</div>
+      <div class="kc-fin-row">
+        <div class="kc-fin-item"><div class="kc-fin-lbl">Potencial que no se percibirá</div><div class="kc-fin-val" id="kPermVpm">—</div></div>
+        <div class="kc-fin-item kc-fin-right"><div class="kc-fin-lbl">% del total</div><div class="kc-fin-val" id="kPermPct">—</div></div>
       </div>
     </div>
     <div class="kc kc-av">
       <div class="kc-lbl">Avance Azimut</div>
-      <div class="kc-val" id="kAvAz">—</div>
-      <div class="kc-frac"><strong id="kAzEjec">0</strong> ejecutados de <strong id="kAzTot">0</strong></div>
+      <div class="kc-val" id="kAzEjec">—</div>
+      <div class="kc-sub">sitios ejecutados</div>
+      <div class="kc-av-row"><span class="kc-fin-lbl">% avance Azimut</span><span class="kc-av-pct" id="kAvAz">—</span></div>
       <div class="kc-bar-wrap"><div class="kc-bar-fill" id="barAv" style="width:0%"></div></div>
-      <div class="kc-hint">Gestión = Ejecutado ÷ Azimut total</div>
+      <div class="kc-hint"><span id="kAzEjec2">0</span> ÷ <span id="kAzTot">0</span> (Resp. Azimut + Ejecutados)</div>
+      <div class="kc-av-row kc-av-row2"><span class="kc-fin-lbl">% avance del total</span><span class="kc-av-pct" id="kAvTot">—</span></div>
+      <div class="kc-bar-wrap"><div class="kc-bar-fill kc-bar-fill2" id="barAvTot" style="width:0%"></div></div>
+      <div class="kc-hint"><span id="kAzEjec3">0</span> ÷ <span id="kTot2">0</span> (Total apagados)</div>
       <button type="button" class="kc-detail-btn kc-detail-btn-cyan" data-goto="evolucion">Ver evolución →</button>
     </div>
   </div>
@@ -632,7 +667,7 @@ html,body{background:var(--bg);color:var(--text);}
     <div class="fc">
       <div class="fc-lbl">Objetivo de Ahorro Mensual</div>
       <div class="fc-val cyan" id="fObjetivo">—</div>
-      <div class="fc-hint">Σ Valor promedio mensual — sitios filtrados (excluye Permanece)</div>
+      <div class="fc-hint">Σ Valor promedio mensual — sitios filtrados (excluye Acción = Permanece)</div>
     </div>
     <div class="fc">
       <div class="fc-lbl">Ahorro Logrado Mensual</div>
@@ -665,14 +700,14 @@ html,body{background:var(--bg);color:var(--text);}
       </div>
     </div>
     <div class="panel">
-      <div class="ptitle">Resumen UniRed</div>
+      <div class="ptitle">Resumen <span class="urLbl">Acción</span></div>
       <div class="pscroll" style="max-height:360px">
         <table class="st">
-          <thead><tr><th>UniRed</th><th>Sitios</th><th>Ejecutados</th><th>Valor Prom. Mensual</th><th id="thMes">Consolidado reciente</th></tr></thead>
+          <thead><tr><th><span class="urLbl">Acción</span></th><th>Sitios</th><th>Ejecutados</th><th>Valor Prom. Mensual</th><th id="thMes">Consolidado reciente</th></tr></thead>
           <tbody id="urB"></tbody>
         </table>
       </div>
-      <div class="panel-note">Clic en una fila para filtrar por ese valor de UniRed.</div>
+      <div class="panel-note">Clic en una fila para filtrar por ese valor de <span class="urLbl">Acción</span>.</div>
     </div>
     <div class="panel">
       <div class="ptitle">Distribución por Región</div>
@@ -683,11 +718,11 @@ html,body{background:var(--bg);color:var(--text);}
 
   <div class="g2">
     <div class="panel">
-      <div class="ptitle">UniRed × Responsabilidad <span style="color:var(--text-dim);text-transform:none;letter-spacing:0">· número de cuentas</span></div>
+      <div class="ptitle"><span class="urLbl">Acción</span> × Responsabilidad <span style="color:var(--text-dim);text-transform:none;letter-spacing:0">· número de cuentas</span></div>
       <div class="pscroll"><table class="pv" id="pvResp"></table></div>
     </div>
     <div class="panel">
-      <div class="ptitle">UniRed × Responsable de la cuenta
+      <div class="ptitle"><span class="urLbl">Acción</span> × Responsable de la cuenta
         <span class="ptools" id="pvPagoTools"><button data-m="n" class="on">Sitios</button><button data-m="v">VPM</button></span>
       </div>
       <div class="pscroll"><table class="pv" id="pvPago"></table></div>
@@ -696,60 +731,19 @@ html,body{background:var(--bg);color:var(--text);}
 </section>
 
 <!-- ─── 2. DESMONTE Y GESTIÓN ──────────────────────────────── -->
-<section class="tab-pane" id="tab-desmonte">
-  <div class="mk-row">
-    <div class="mk"><div class="mk-lbl">Desmontados con acta</div><div class="mk-val" id="mActa">—</div><div class="mk-sub" id="mActaS">—</div></div>
-    <div class="mk"><div class="mk-lbl">TX apagada (OFF)</div><div class="mk-val" id="mTxOff">—</div><div class="mk-sub" id="mTxOffS">—</div></div>
-    <div class="mk"><div class="mk-lbl">TX permanece</div><div class="mk-val" id="mTxPer">—</div><div class="mk-sub" id="mTxPerS">—</div></div>
-    <div class="mk"><div class="mk-lbl">Para gestión de retiro</div><div class="mk-val" id="mRetiro">—</div><div class="mk-sub">Total − UniRed “Permanece”</div></div>
-    <div class="mk"><div class="mk-lbl">Atención vencida</div><div class="mk-val" id="mVenc">—</div><div class="mk-sub" id="mVencS">—</div></div>
-  </div>
-
-  <div class="g3">
-    <div class="panel">
-      <div class="ptitle">Gestión</div>
-      <div class="hb" id="hbGestion"></div>
-      <div class="panel-note">Clic en una barra para ver esos sitios en el detalle.</div>
+<section class="tab-pane" id="tab-torreros">
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Desempeño por torrero (TOWER CO)</div>
+      <div class="ti"><strong id="twCnt">0</strong> torreros · clic en una fila para filtrar</div>
     </div>
-    <div class="panel">
-      <div class="ptitle">Categoría</div>
-      <div class="hb" id="hbCategoria"></div>
+    <div class="tscroll" style="max-height:640px">
+      <table class="mt" id="twTable">
+        <thead id="twHead"></thead>
+        <tbody id="twBody"></tbody>
+      </table>
     </div>
-    <div class="panel">
-      <div class="ptitle">Estado Azimut</div>
-      <div class="hb pscroll" id="hbEstado" style="max-height:470px"></div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="panel">
-      <div class="ptitle">TOWER CO <span style="color:var(--text-dim);text-transform:none;letter-spacing:0">· Azimut vs Millicom</span></div>
-      <div class="hb" id="hbTower"></div>
-      <div class="legend"><span><i class="seg-az"></i>Azimut</span><span><i class="seg-ur"></i>Millicom</span></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="panel">
-        <div class="ptitle">Estado TX</div>
-        <div class="hb" id="hbTx"></div>
-      </div>
-      <div class="panel">
-        <div class="ptitle">Sitio desmontado, con acta de entrega</div>
-        <div class="hb" id="hbActa"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="panel">
-      <div class="ptitle">Tiempos de atención</div>
-      <div class="hb" id="hbTiempos"></div>
-      <div class="panel-note">Solo sitios con “Tiempos de atencion” diligenciado.</div>
-    </div>
-    <div class="panel">
-      <div class="ptitle">Estado Tigo</div>
-      <div class="hb" id="hbTigo"></div>
-      <div class="panel-note">Solo sitios con “estado tigo” diligenciado.</div>
-    </div>
+    <div class="panel-note" id="twNote"></div>
   </div>
 </section>
 
@@ -767,33 +761,6 @@ html,body{background:var(--bg);color:var(--text);}
       </table>
     </div>
     <div class="panel-note" id="comNote"></div>
-  </div>
-</section>
-
-<!-- ─── 4. FACTURACIÓN MENSUAL ─────────────────────────────── -->
-<section class="tab-pane" id="tab-factura">
-  <div class="mk-row" style="grid-template-columns:repeat(4,1fr)">
-    <div class="mk"><div class="mk-lbl" id="fcFirstL">Primer mes</div><div class="mk-val" id="fcFirst">—</div><div class="mk-sub">Σ facturado sitios filtrados</div></div>
-    <div class="mk"><div class="mk-lbl" id="fcLastL">Último mes</div><div class="mk-val" id="fcLast">—</div><div class="mk-sub">Σ facturado sitios filtrados</div></div>
-    <div class="mk"><div class="mk-lbl">Variación primer → último</div><div class="mk-val" id="fcVar">—</div><div class="mk-sub" id="fcVarS">—</div></div>
-    <div class="mk"><div class="mk-lbl">Sitios en $0 último mes</div><div class="mk-val" id="fcZero">—</div><div class="mk-sub" id="fcZeroS">—</div></div>
-  </div>
-  <div class="tw">
-    <div class="ttb">
-      <div class="ttb-t">Facturación por mes — columnas “Consolidado &lt;mes&gt;”</div>
-      <div class="ti"><strong id="fcN">0</strong> meses detectados</div>
-    </div>
-    <div class="legend" style="padding-top:12px"><span><i class="seg-az"></i>Azimut</span><span><i class="seg-ur"></i>Millicom</span></div>
-    <div class="col-chart" id="fcChart"></div>
-  </div>
-  <div class="tw" style="margin-top:18px">
-    <div class="ttb"><div class="ttb-t">Tabla de facturación mensual</div></div>
-    <div class="tscroll">
-      <table class="mt">
-        <thead><tr><th>Mes</th><th class="num">Total</th><th class="num">Azimut</th><th class="num">Millicom</th><th class="num">Var. vs mes anterior</th><th class="num">Sitios con valor &gt; 0</th></tr></thead>
-        <tbody id="fcBody"></tbody>
-      </table>
-    </div>
   </div>
 </section>
 
@@ -836,7 +803,7 @@ html,body{background:var(--bg);color:var(--text);}
     </div>
     <div class="tscroll" style="max-height:420px">
       <table class="mt">
-        <thead><tr><th>Site</th><th>NIC</th><th>Nombre del Sitio</th><th>Comercializador</th><th>UniRed</th><th>Estado Azimut</th><th>Gestión</th><th>Fecha Gestión</th><th class="num">Valor prom. mensual</th></tr></thead>
+        <thead><tr><th>Site</th><th>NIC</th><th>Nombre del Sitio</th><th>Comercializador</th><th><span class="urLbl">Acción</span></th><th>Estado Azimut</th><th>Gestión</th><th>Fecha Gestión</th><th class="num">Valor prom. mensual</th></tr></thead>
         <tbody id="sinB"></tbody>
       </table>
     </div>
@@ -847,13 +814,36 @@ html,body{background:var(--bg);color:var(--text);}
 <section class="tab-pane" id="tab-millicom">
   <div class="tw">
     <div class="ttb">
-      <div class="ttb-t">Resumen dinámico — UniRed × Estado Azimut (fuera del grupo Azimut)</div>
+      <div class="ttb-t">Resumen dinámico — <span class="urLbl">Acción</span> × Categoría (Responsabilidad = Millicom)</div>
       <div class="ti"><strong id="mCnt">0</strong> sitios</div>
     </div>
     <div class="tscroll" style="max-height:640px">
       <table class="pv">
         <thead id="mThead"></thead>
         <tbody id="mB"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DETALLE AZIMUT ─────────────────────────────────────── -->
+<section class="tab-pane" id="tab-azimut">
+  <div class="tw" style="margin-bottom:14px">
+    <div class="ttb">
+      <div class="ttb-t"><span class="urLbl">Acción</span> — Responsabilidad = Azimut</div>
+      <div class="ti"><strong id="azCnt">0</strong> sitios · clic en una tarjeta para ver su desglose</div>
+    </div>
+    <div class="acc-grid" id="azAccGrid"></div>
+  </div>
+  <div class="tw">
+    <div class="ttb">
+      <div class="ttb-t">Desglose — Estado Azimut × Categoría · <span id="azSelLbl" style="color:var(--green)">Todas</span></div>
+      <div class="ti"><strong id="azSelCnt">0</strong> sitios</div>
+    </div>
+    <div class="tscroll" style="max-height:640px">
+      <table class="pv">
+        <thead id="azThead"></thead>
+        <tbody id="azB"></tbody>
       </table>
     </div>
   </div>
@@ -930,7 +920,11 @@ function toast(msg){
    CONFIGURACIÓN
    ═════════════════════════════════════════════════════════════ */
 const SHEET_NAME = 'Consolidado Apagados';
-/* Grupo Azimut (valores de la columna UniRed). “Devuelta” es la devolución ya ejecutada. */
+/* Columna de acción: en V2 se llama “Accion” (antes “UniRed”, columna Y). Se acepta cualquiera de los dos nombres. */
+const UR_ALIASES = ['Accion','UniRed'];
+let UR_LBL = 'Acción';
+/* Grupo Azimut (valores de la columna Accion/UniRed). “Devuelta” es la devolución ya ejecutada.
+   “Pendiente Autorizacion Cancelacion” y “Cuenta en tercero” quedan en Millicom. */
 const AZIMUT_GROUP = ['Cancelar','Devolver','Ceder','Devuelta'];
 /* Rango válido para “Dias para la cancelacion” (excluye valores atípicos por fechas vacías) */
 const DIAS_MIN = 0, DIAS_MAX = 1500;
@@ -939,7 +933,7 @@ const DIAS_MIN = 0, DIAS_MAX = 1500;
 const REQ = {
   Operator:'Operador', Site:'Pair Site (Offgrid) Emplazamiento', NIC:'NIC',
   Nombre:'Nombre del Sitio', Comercializador:'Comercializador', VPM:'Valor promedio mensual',
-  UniRed:'UniRed', Estado:'Estado Azimut', Gestion:'Gestión', Meses:'Meses con ahorro',
+  UniRed:UR_ALIASES, Estado:'Estado Azimut', Gestion:'Gestión', Meses:'Meses con ahorro',
   Region:'Región', Responsable:'Responsable de la cuenta'
 };
 /* Columnas opcionales: si no existen, la sección correspondiente queda vacía */
@@ -1008,12 +1002,69 @@ function toDate(v){
 }
 const isAz   = r => AZIMUT_GROUP.includes(r.UniRed);
 const isEjec = v => /^ejecutado/.test(norm(v));
+/* Cuenta que permanece: columna Acción (Y) = “Permanece” (sin importar mayúsculas ni espacios) */
+const isPerm = r => norm(r.UniRed) === 'permanece';
 /* Gestión Actas: 'con' = Ejecutado (con soporte), 'sin' = Ejecutado sin soporte, '' = otro/vacío */
 function actaTipo(v){
   const n = norm(v);
   if(!/^ejecutado/.test(n)) return '';
   return /sin soporte/.test(n) ? 'sin' : 'con';
 }
+
+/* ═════════════════════════════════════════════════════════════
+   UNIFICACIÓN DE COMERCIALIZADORES
+   Nombre unificado → variantes que trae el Excel (se comparan sin
+   mayúsculas, tildes, puntos ni espacios extra). Validado en línea:
+   · Air-e S.A.S. E.S.P. es la razón social actual de Caribesol de la Costa.
+   · Afinia opera como Caribemar de la Costa S.A.S. E.S.P. (grupo EPM).
+   · EPSA cambió su nombre a Celsia Colombia y absorbió a Celsia Tolima.
+   · Codensa se fusionó en Enel Colombia S.A. E.S.P. (2022).
+   · Empresa de Energía de Arauca = Enelar.
+   Las filiales del grupo EPM (CHEC, EDEQ, ESSA, CENS) y CEO/CETSA se
+   mantienen separadas porque son empresas distintas. UNE EPM Telecom no es EPM.
+   ═════════════════════════════════════════════════════════════ */
+const COM_ALIAS = {
+  'EPM':                ['EPM','EMPRESAS PUBLICAS DE MEDELLIN','Empresas Públicas de Medellín E.S.P.'],
+  'Enel-Codensa':       ['Enel-Codensa','Enel Codensa','Codensa','ENEL COLOMBIA S.A. ESP','Enel Colombia'],
+  'Caribemar (Afinia)': ['Caribemar','CARIBEMAR DE LA COSTA SAS ESP','Afinia'],
+  'Caribesol (Air-e)':  ['Caribesol','AIR E SAS ESP','Air-e','Caribesol de la Costa SAS ESP'],
+  'Celsia':             ['Celsia','CELSIA TOLIMA SA ESP','EPSA','EMPRESA DE ENERGIA DEL PACIFICO S.A. E.S.P. - EPSA','Celsia Colombia'],
+  'CEO':                ['Ceo','COMPAÑÍA ENERGETICA DE OCCIDENTE S.A E.S.P'],
+  'EBSA':               ['EBSA','EMPRESA DE ENERGIA DE BOYACA S.A. ESP'],
+  'Electrohuila':       ['Electrohuila','ELECTRIFICADORA DEL HUILA S.A. ESP'],
+  'Emcali':             ['Emcali','EMPRESAS MUNICIPALES DE CALI - EMCALI E.I.C.E.'],
+  'Enerca':             ['Enerca','EMPRESA ENERGIA DE CASANARE ENERCA'],
+  'Enelar':             ['Enelar','EMPRESA DE ENERGIA DE ARAUCA'],
+  'ATC Sitios':         ['ATC Sitios','ATC SITIOS DE COLOMBIA SAS'],
+  'Bia Energy':         ['Bia Energy','BIA ENERGY SAS ESP'],
+  'Golden':             ['Golden','GOLDEN COMUNICACIONES SAS'],
+  'Phoenix Tower':      ['PHOENIX TOWER INTER COLOMBIA LTDA','PHOENIX TOWER INTERNACIONAL'],
+  'Ruitoque':           ['Ruitoque','RUITOQUE E.S.P.'],
+  'Sopesa':             ['Sopesa'],
+  'ETB':                ['ETB','EMP DE TELECOMUNICACIONES DE BOGOTA ESP'],
+  'No Cedido / No Existe Contrato': ['No Cedido','No Existe Contrato']
+};
+const comKey = s => norm(s).replace(/[^a-z0-9ñ]+/g,' ').trim();
+const COM_MAP = {};
+Object.entries(COM_ALIAS).forEach(([u,vs])=> vs.forEach(v=> COM_MAP[comKey(v)] = u));
+const unifyCom = s => s ? (COM_MAP[comKey(s)] || s) : s;
+/* Unificación de torreros (TOWER CO): variantes de escritura y portafolios del mismo dueño */
+const TOWER_ALIAS = {
+  'ATC':        ['ATC'],
+  'Phoenix':    ['PHOENIX'],
+  'ATP':        ['ATP','ATP TORRES 2'],
+  'Tigo':       ['TIGO','TIGO_P_COM','TIGO_SA_COM','TIGO P (tercero relevante)'],
+  'Claro':      ['CLARO','CLARO ACUERDO INTERCAMBIO','CLARO - Colaboración'],
+  'Centennial': ['CENTENNIAL TOWERS COLOMBIA S.A.S.','CENTENNIAL / IHS'],
+  'Golden':     ['GOLDEN'],
+  'Telefónica': ['TELEFONICA'],
+  'Tower One':  ['TOWER ONE'],
+  'Collocation':['COLLOCATION'],
+  'QMC':        ['QMC']
+};
+const TW_MAP = {};
+Object.entries(TOWER_ALIAS).forEach(([u,vs])=> vs.forEach(v=> TW_MAP[comKey(v)] = u));
+const unifyTower = s => s ? (TW_MAP[comKey(s)] || s) : s;
 
 /* ═════════════════════════════════════════════════════════════
    CARGA DEL ARCHIVO
@@ -1080,23 +1131,28 @@ let HEADERS = [], CONS = [], IDX = {};
 
 function processSheet(ws, sheetName, fname){
   const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true, blankrows:false});
-  /* Fila de encabezados: la primera (de las 10 iniciales) que contenga UniRed y NIC */
-  let hr = rows.slice(0,10).findIndex(r => r && r.some(c=>norm(c)==='unired') && r.some(c=>norm(c)==='nic'));
+  /* Fila de encabezados: la primera (de las 10 iniciales) que contenga Accion/UniRed y NIC */
+  const urN = UR_ALIASES.map(norm);
+  let hr = rows.slice(0,10).findIndex(r => r && r.some(c=>urN.includes(norm(c))) && r.some(c=>norm(c)==='nic'));
   if(hr === -1){
-    showStatus('error','No se encontró la fila de encabezados en la hoja "'+escHtml(sheetName)+'" (se buscan las columnas “UniRed” y “NIC” en las primeras 10 filas).');
+    showStatus('error','No se encontró la fila de encabezados en la hoja "'+escHtml(sheetName)+'" (se buscan las columnas “Accion” o “UniRed” y “NIC” en las primeras 10 filas).');
     return;
   }
   HEADERS = rows[hr].map(h => h==null? '' : String(h).trim());
-  const find = name => HEADERS.findIndex(h => norm(h) === norm(name));
+  /* name puede ser un texto o una lista de nombres alternativos */
+  const find = name => { const ns = [].concat(name).map(norm); return HEADERS.findIndex(h => ns.includes(norm(h))); };
 
   const missing = [];
   IDX = {};
-  Object.entries(REQ).forEach(([k,h])=>{ const i=find(h); if(i===-1) missing.push(h); else IDX[k]=i; });
+  Object.entries(REQ).forEach(([k,h])=>{ const i=find(h); if(i===-1) missing.push([].concat(h).join(' o ')); else IDX[k]=i; });
   if(missing.length){
     showStatus('error','La hoja "'+escHtml(sheetName)+'" no tiene la estructura esperada. Faltan columnas obligatorias:<ul>'+missing.map(m=>'<li>'+escHtml(m)+'</li>').join('')+'</ul>');
     return;
   }
   Object.entries(OPT).forEach(([k,h])=>{ IDX[k]=find(h); });
+  /* Etiqueta visible = nombre real de la columna en el Excel */
+  UR_LBL = norm(HEADERS[IDX.UniRed])==='accion' ? 'Acción' : HEADERS[IDX.UniRed];
+  document.querySelectorAll('.urLbl').forEach(e=> e.textContent = UR_LBL);
 
   /* Columnas mensuales “Consolidado <Mes> <Año>” */
   CONS = [];
@@ -1115,7 +1171,7 @@ function processSheet(ws, sheetName, fname){
     const row = rows[r]; if(!row) continue;
     const site = str(g(row,'Site')), nic = str(g(row,'NIC'));
     const ur = str(g(row,'UniRed')), est = str(g(row,'Estado'));
-    /* Filas válidas: tienen sitio o NIC y además UniRed o Estado Azimut
+    /* Filas válidas: tienen sitio o NIC y además Accion/UniRed o Estado Azimut
        (descarta las filas auxiliares que hay al final de la hoja) */
     if(!site && !nic) continue;
     if(!ur && !est) continue;
@@ -1125,13 +1181,14 @@ function processSheet(ws, sheetName, fname){
       raw: row,
       Site: site, NIC: nic, Nombre: str(g(row,'Nombre')),
       Operator: str(g(row,'Operator')).toUpperCase(),
-      Comercializador: str(g(row,'Comercializador')),
+      ComOrig: str(g(row,'Comercializador')),
+      Comercializador: unifyCom(str(g(row,'Comercializador'))),
       VPM: vpm, Meses: meses,
       Acumulado: IDX.Acumulado>=0 ? num(g(row,'Acumulado')) : vpm*meses,
       UniRed: ur, Estado: est, Gestion: str(g(row,'Gestion')),
       Region: str(g(row,'Region')).toUpperCase(),
       Responsable: str(g(row,'Responsable')),
-      Tower: str(g(row,'Tower')), TX: str(g(row,'TX')).toUpperCase(),
+      TowerOrig: str(g(row,'Tower')), Tower: unifyTower(str(g(row,'Tower'))), TX: str(g(row,'TX')).toUpperCase(),
       Acta: str(g(row,'Acta')), Respons: str(g(row,'Respons')).toUpperCase(),
       Categoria: str(g(row,'Categoria')),
       FechaGestion: toDate(g(row,'FechaGestion')),
@@ -1170,14 +1227,14 @@ function canon(data, key){
    ═════════════════════════════════════════════════════════════ */
 let DATA=[], filtered=[], page=1, curTab='resumen';
 const PG=50, SL={resp:'',op:'',seg:''};
-let sortKey='', sortDir=1, pagoMode='n', comSort={k:'n',d:-1};
+let sortKey='', sortDir=1, pagoMode='n';
 
 function initDashboard(data, fname){
   DATA = data; filtered = [...DATA]; page = 1;
-  SL.resp=''; SL.op=''; SL.seg='';
+  SL.resp=''; SL.op=''; SL.seg=''; azSel='';
   document.getElementById('dashDate').textContent = nowStr();
   document.getElementById('dashFile').textContent = fname;
-  document.getElementById('kAzSub').textContent = AZIMUT_GROUP.join(' + ');
+  document.getElementById('kAzSub').textContent = 'Responsabilidad = Azimut';
   document.getElementById('thMes').textContent = CONS.length ? 'Consolidado '+CONS[CONS.length-1].short : 'Consolidado reciente';
   buildFilters();
   buildDetailHead();
@@ -1213,7 +1270,7 @@ function buildFilters(){
   btnGroup('fOpGroup','op','Operator',5);
   btnGroup('fSegGroup','seg','Seguimiento');
   fillSelect('fReg','Región','Region');
-  fillSelect('fUr','UniRed','UniRed');
+  fillSelect('fUr',UR_LBL,'UniRed');
   fillSelect('fEa','Estado Azimut','Estado');
   fillSelect('fTw','TOWER CO','Tower');
   fillSelect('fCom','Comercializador','Comercializador');
@@ -1253,8 +1310,8 @@ function applyF(){
   renderAll();
 }
 function renderAll(){
-  renderResumen(); renderDesmonte(); renderComercial(); renderFactura();
-  renderEvolucion(); renderMillicom(); renderTable(); renderPag();
+  renderResumen(); renderTorreros(); renderComercial();
+  renderEvolucion(); renderMillicom(); renderAzimut(); renderTable(); renderPag();
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -1333,7 +1390,7 @@ function pivot(tableEl, rows, rowKey, colKey, mode, rowOrder){
     }).join('') +
     `<tr class="tot"><td>Total</td>${cs.map(c=>`<td>${f(ct[c])}</td>`).join('')}<td>${f(gt)}</td></tr></tbody>`;
 }
-const rowKeyLabel = k => ({UniRed:'UniRed', Estado:'Estado Azimut'})[k] || k;
+const rowKeyLabel = k => ({UniRed:UR_LBL, Estado:'Estado Azimut', Categoria:'Categoría'})[k] || k;
 const UR_ORDER = ['Cancelar','Devolver','Devuelta','Ceder','Pendiente Autorizacion Cancelacion','Permanece','Cuenta en tercero','No Cedido'];
 
 /* ═════════════════════════════════════════════════════════════
@@ -1342,20 +1399,39 @@ const UR_ORDER = ['Cancelar','Devolver','Devuelta','Ceder','Pendiente Autorizaci
 function renderResumen(){
   const F = filtered, tot = F.length;
   const azRows = F.filter(isAz), az = azRows.length;
-  const azEjec = azRows.filter(r=>isEjec(r.Gestion)).length;
-  const avPct = az>0 ? azEjec/az*100 : 0;
+  /* Tarjeta AZIMUT: solo sitios con Responsabilidad = Azimut */
+  const respAz = F.filter(r=>r.Respons==='AZIMUT');
+  /* Avance Azimut = Ejecutados (Gestión Actas: Ejecutado + Ejecutado sin soporte)
+                     ÷ (Responsabilidad Azimut + Ejecutados) */
+  const azEjec = F.filter(r=>actaTipo(r.GestionActas)).length;
+  const avBase = respAz.length + azEjec;
+  const avPct = avBase>0 ? azEjec/avBase*100 : 0;
 
   document.getElementById('kTot').textContent = fmtN(tot);
-  document.getElementById('kUr').textContent  = fmtN(tot-az);
-  document.getElementById('kAz').textContent  = fmtN(az);
+  /* Tarjeta MILLICOM: solo sitios con Responsabilidad = Millicom; % = Millicom ÷ Total apagados */
+  const respMi = F.filter(r=>r.Respons==='MILLICOM');
+  document.getElementById('kUr').textContent  = fmtN(respMi.length);
+  /* Tarjeta PERMANECEN: misma regla que excluye del objetivo (isPerm) */
+  const perm = F.filter(isPerm);
+  document.getElementById('kPerm').textContent    = fmtN(perm.length);
+  document.getElementById('kPermVpm').textContent = fmtMill(perm.reduce((s,r)=>s+r.VPM,0));
+  document.getElementById('kPermPct').textContent = pct(perm.length, tot);
+  document.getElementById('kAz').textContent  = fmtN(respAz.length);
   document.getElementById('kAvAz').textContent = avPct.toFixed(1).replace('.',',')+'%';
   document.getElementById('kAzEjec').textContent = fmtN(azEjec);
-  document.getElementById('kAzTot').textContent  = fmtN(az);
+  document.getElementById('kAzTot').textContent  = fmtN(avBase);
   document.getElementById('barAv').style.width = Math.min(100,avPct)+'%';
+  /* Segundo avance: ejecutados ÷ total apagados (sitios filtrados) */
+  const avTot = tot>0 ? azEjec/tot*100 : 0;
+  document.getElementById('kAvTot').textContent = avTot.toFixed(1).replace('.',',')+'%';
+  document.getElementById('barAvTot').style.width = Math.min(100,avTot)+'%';
+  document.getElementById('kAzEjec2').textContent = fmtN(azEjec);
+  document.getElementById('kAzEjec3').textContent = fmtN(azEjec);
+  document.getElementById('kTot2').textContent = fmtN(tot);
 
   let objetivo=0, logrado=0, acum=0, vpmUr=0, acumAz=0;
   F.forEach(r=>{
-    if(r.UniRed!=='Permanece') objetivo += r.VPM;
+    if(!isPerm(r)) objetivo += r.VPM;
     if(isEjec(r.Gestion)) logrado += r.VPM;
     acum += r.Acumulado;
     if(isAz(r)) acumAz += r.Acumulado; else vpmUr += r.VPM;
@@ -1363,10 +1439,12 @@ function renderResumen(){
   document.getElementById('fObjetivo').textContent = fmtMill(objetivo);
   document.getElementById('fLogrado').textContent  = fmtMill(logrado);
   document.getElementById('fAcum').textContent     = fmtMill(acum);
-  document.getElementById('kAzAcum').textContent   = fmtMill(acumAz);
-  document.getElementById('kAzPct').textContent    = pct(az,tot);
-  document.getElementById('kUrVpm').textContent    = fmtMill(vpmUr);
-  document.getElementById('kUrPct').textContent    = pct(tot-az,tot);
+  /* Potencial de ahorro = Σ Valor promedio mensual (columna F) de los sitios con Responsabilidad = Azimut */
+  document.getElementById('kAzAcum').textContent   = fmtMill(respAz.reduce((s,r)=>s+r.VPM,0));
+  document.getElementById('kAzPct').textContent    = pct(respAz.length,tot);
+  /* Potencial de ahorro = Σ Valor promedio mensual (columna F) de los sitios con Responsabilidad = Millicom */
+  document.getElementById('kUrVpm').textContent    = fmtMill(respMi.reduce((s,r)=>s+r.VPM,0));
+  document.getElementById('kUrPct').textContent    = pct(respMi.length, tot);
   const lp = objetivo>0 ? logrado/objetivo*100 : 0;
   document.getElementById('pmAz').textContent = lp.toFixed(1).replace('.',',')+'%';
   document.getElementById('pmBar').style.width = Math.min(100,lp)+'%';
@@ -1408,125 +1486,60 @@ document.querySelectorAll('#pvPagoTools button').forEach(b=> b.addEventListener(
 }));
 
 /* ═════════════════════════════════════════════════════════════
-   2. DESMONTE Y GESTIÓN
+   2–3. TORREROS Y COMERCIALIZADORES (misma tabla, distinta agrupación)
    ═════════════════════════════════════════════════════════════ */
-function renderDesmonte(){
-  const F = filtered, tot = F.length;
-  const acta = F.filter(r=>norm(r.Acta)==='si').length;
-  const txOff = F.filter(r=>r.TX==='OFF').length, txPer = F.filter(r=>r.TX==='PERMANECE').length;
-  const ret = F.filter(r=>r.UniRed!=='Permanece').length;
-  const tiem = F.filter(r=>r.Tiempos), venc = tiem.filter(r=>norm(r.Tiempos)==='vencido').length;
-  document.getElementById('mActa').textContent = fmtN(acta);
-  document.getElementById('mActaS').textContent = pct(acta,tot)+' del total filtrado';
-  document.getElementById('mTxOff').textContent = fmtN(txOff);
-  document.getElementById('mTxOffS').textContent = pct(txOff,tot)+' del total filtrado';
-  document.getElementById('mTxPer').textContent = fmtN(txPer);
-  document.getElementById('mTxPerS').textContent = pct(txPer,tot)+' del total filtrado';
-  document.getElementById('mRetiro').textContent = fmtN(ret);
-  document.getElementById('mVenc').textContent = fmtN(venc);
-  document.getElementById('mVencS').textContent = 'de '+fmtN(tiem.length)+' con tiempo medido ('+pct(venc,tiem.length)+')';
-
-  const toItems = arr => arr.map(([label,total])=>({label,total}));
-  const goDetalle = (sel)=> v=>{ if(v.startsWith('(')) return; setSelect(sel, v); setTab('detalle'); };
-  hbars('hbGestion', toItems(countBy(F,'Gestion')));
-  hbars('hbCategoria', toItems(countBy(F,'Categoria')));
-  hbars('hbEstado', toItems(countBy(F,'Estado')), {onClick: goDetalle('fEa')});
-  hbars('hbTower', splitItems(F,'Tower',12), {split:true, onClick: v=>{ if(!v.startsWith('Otros')) setSelect('fTw',v); }});
-  hbars('hbTx', toItems(countBy(F,'TX')));
-  hbars('hbActa', toItems(countBy(F,'Acta')));
-  hbars('hbTiempos', toItems(countBy(tiem,'Tiempos')), {color:'var(--orange)'});
-  hbars('hbTigo', toItems(countBy(F.filter(r=>r.EstadoTigo),'EstadoTigo')));
-}
-
-/* ═════════════════════════════════════════════════════════════
-   3. COMERCIALIZADORES
-   ═════════════════════════════════════════════════════════════ */
-const COM_COLS = [
-  {k:'name', t:'Comercializador'}, {k:'n', t:'Sitios', num:1}, {k:'az', t:'Azimut', num:1},
-  {k:'e', t:'Ejecutados', num:1}, {k:'av', t:'Avance Azimut', num:1}, {k:'vpm', t:'Valor prom. mensual', num:1},
+const GRP_NOTE = 'Gestión Azimut / Millicom = columna Responsabilidad; Ejecutados = Gestión Actas (con y sin soporte); Permanece = Acción “Permanece”; las cuatro suman los sitios. Avance Azimut = Ejecutados ÷ (Gestión Azimut + Ejecutados). Días prom. cancelación: promedio de “Dias para la cancelacion” en sitios ejecutados, considerando solo valores entre '+(DIAS_MIN+1)+' y '+DIAS_MAX+' días (se descartan valores atípicos que vienen de fechas vacías).';
+const GRP = {
+  com: {field:'Comercializador', orig:'ComOrig', label:'Comercializador', head:'comHead', body:'comBody', cnt:'comCnt', note:'comNote', sel:'fCom', sort:{k:'n',d:-1},
+        extra:' Los nombres de comercializador se unifican (p. ej. EMPRESAS PUBLICAS DE MEDELLIN → EPM, AIR E SAS ESP → Caribesol (Air-e), EPSA → Celsia); bajo cada nombre se indica qué variantes del Excel agrupa.'},
+  tw:  {field:'Tower', orig:'TowerOrig', label:'Torrero (TOWER CO)', head:'twHead', body:'twBody', cnt:'twCnt', note:'twNote', sel:'fTw', sort:{k:'n',d:-1},
+        extra:' Los nombres de torrero se unifican (p. ej. ATP TORRES 2 → ATP, TIGO_P_COM / TIGO_SA_COM → Tigo); bajo cada nombre se indica qué variantes del Excel agrupa.'}
+};
+const GRP_COLS = [
+  {k:'name', t:''}, {k:'n', t:'Sitios', num:1},
+  {k:'az', t:'Gestión Azimut', num:1}, {k:'mi', t:'Gestión Millicom', num:1},
+  {k:'e', t:'Ejecutados', num:1}, {k:'pe', t:'Permanece', num:1}, {k:'av', t:'Avance Azimut', num:1}, {k:'vpm', t:'Valor prom. mensual', num:1},
   {k:'log', t:'Ahorro logrado mensual', num:1}, {k:'acum', t:'Ahorro acumulado', num:1},
   {k:'dias', t:'Días prom. cancelación', num:1}
 ];
-function renderComercial(){
+function renderComercial(){ renderGroupTable(GRP.com); }
+function renderTorreros(){ renderGroupTable(GRP.tw); }
+function renderGroupTable(G){
   const m = {};
   filtered.forEach(r=>{
-    const k = r.Comercializador || '(sin dato)';
-    const o = m[k] = m[k] || {name:k,n:0,az:0,azE:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0};
+    const k = r[G.field] || '(sin dato)';
+    const o = m[k] = m[k] || {name:k,n:0,az:0,mi:0,pe:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0,orig:{}};
+    if(r[G.orig]) o.orig[r[G.orig]] = (o.orig[r[G.orig]]||0)+1;
     o.n++; o.vpm += r.VPM; o.acum += r.Acumulado;
-    const ej = isEjec(r.Gestion);
+    /* Mismas reglas que las tarjetas del Resumen */
+    const ej = !!actaTipo(r.GestionActas);
     if(ej){ o.e++; o.log += r.VPM; if(r.Dias!=null){ o.dS+=r.Dias; o.dN++; } }
-    if(isAz(r)){ o.az++; if(ej) o.azE++; }
+    if(r.Respons==='AZIMUT') o.az++;
+    else if(r.Respons==='MILLICOM') o.mi++;
+    else if(isPerm(r)) o.pe++;
   });
-  const arr = Object.values(m).map(o=>({...o, av: o.az? o.azE/o.az : -1, dias: o.dN? o.dS/o.dN : -1}));
-  const {k,d} = comSort;
+  const arr = Object.values(m).map(o=>({...o, av: (o.az+o.e)? o.e/(o.az+o.e) : -1, dias: o.dN? o.dS/o.dN : -1}));
+  const {k,d} = G.sort;
   arr.sort((a,b)=> k==='name' ? d*a.name.localeCompare(b.name,'es') : d*(a[k]-b[k]));
-  document.getElementById('comCnt').textContent = fmtN(arr.length);
-  document.getElementById('comHead').innerHTML = '<tr>'+COM_COLS.map(c=>
-    `<th class="sort ${c.num?'num':''} ${k===c.k?'sorted':''}" data-k="${c.k}">${c.t}<span class="arr">${k===c.k?(d>0?'▲':'▼'):'↕'}</span></th>`).join('')+'</tr>';
-  document.querySelectorAll('#comHead th').forEach(th=> th.addEventListener('click', ()=>{
-    const nk = th.dataset.k; comSort = {k:nk, d: comSort.k===nk ? -comSort.d : (nk==='name'?1:-1)}; renderComercial();
+  document.getElementById(G.cnt).textContent = fmtN(arr.length);
+  const head = document.getElementById(G.head);
+  head.innerHTML = '<tr>'+GRP_COLS.map(c=>
+    `<th class="sort ${c.num?'num':''} ${k===c.k?'sorted':''}" data-k="${c.k}">${c.k==='name'?G.label:c.t}<span class="arr">${k===c.k?(d>0?'▲':'▼'):'↕'}</span></th>`).join('')+'</tr>';
+  head.querySelectorAll('th').forEach(th=> th.addEventListener('click', ()=>{
+    const nk = th.dataset.k; G.sort = {k:nk, d: G.sort.k===nk ? -G.sort.d : (nk==='name'?1:-1)}; renderGroupTable(G);
   }));
-  const T = arr.reduce((s,o)=>({n:s.n+o.n,az:s.az+o.az,azE:s.azE+o.azE,e:s.e+o.e,vpm:s.vpm+o.vpm,log:s.log+o.log,acum:s.acum+o.acum,dS:s.dS+o.dS,dN:s.dN+o.dN}),{n:0,az:0,azE:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0});
+  const T = arr.reduce((s,o)=>({n:s.n+o.n,az:s.az+o.az,mi:s.mi+o.mi,pe:s.pe+o.pe,e:s.e+o.e,vpm:s.vpm+o.vpm,log:s.log+o.log,acum:s.acum+o.acum,dS:s.dS+o.dS,dN:s.dN+o.dN}),{n:0,az:0,mi:0,pe:0,e:0,vpm:0,log:0,acum:0,dS:0,dN:0});
   const avCell = (a,b)=> b? `<div class="avb"><div class="t"><div class="f" style="width:${a/b*100}%"></div></div><span>${pct(a,b,0)}</span></div>` : '<span style="color:var(--text-dim)">—</span>';
-  const body = document.getElementById('comBody');
+  const body = document.getElementById(G.body);
   body.innerHTML = arr.map(o=>`<tr class="click" data-c="${escAttr(o.name)}">
-      <td>${escHtml(o.name)}</td><td class="num">${fmtN(o.n)}</td><td class="num">${fmtN(o.az)}</td><td class="num">${fmtN(o.e)}</td>
-      <td>${avCell(o.azE,o.az)}</td><td class="num">${cop(o.vpm)}</td><td class="num">${cop(o.log)}</td><td class="num">${cop(o.acum)}</td>
+      <td>${escHtml(o.name)}${Object.keys(o.orig).length>1 ? `<div class="com-orig">Unifica: ${Object.entries(o.orig).sort((a,b)=>b[1]-a[1]).map(([v,c])=>escHtml(v)+' ('+fmtN(c)+')').join(' · ')}</div>` : ''}</td><td class="num">${fmtN(o.n)}</td><td class="num">${fmtN(o.az)}</td><td class="num">${fmtN(o.mi)}</td><td class="num">${fmtN(o.e)}</td><td class="num">${fmtN(o.pe)}</td>
+      <td>${avCell(o.e,o.az+o.e)}</td><td class="num">${cop(o.vpm)}</td><td class="num">${cop(o.log)}</td><td class="num">${cop(o.acum)}</td>
       <td class="num" title="${o.dN} sitios con dato">${o.dN? Math.round(o.dias)+' días' : '—'}</td></tr>`).join('')
-    + `<tr style="background:rgba(0,180,216,.08)"><td><strong>Total</strong></td><td class="num">${fmtN(T.n)}</td><td class="num">${fmtN(T.az)}</td><td class="num">${fmtN(T.e)}</td>
-      <td>${avCell(T.azE,T.az)}</td><td class="num">${cop(T.vpm)}</td><td class="num">${cop(T.log)}</td><td class="num">${cop(T.acum)}</td>
+    + `<tr style="background:rgba(0,180,216,.08)"><td><strong>Total</strong></td><td class="num">${fmtN(T.n)}</td><td class="num">${fmtN(T.az)}</td><td class="num">${fmtN(T.mi)}</td><td class="num">${fmtN(T.e)}</td><td class="num">${fmtN(T.pe)}</td>
+      <td>${avCell(T.e,T.az+T.e)}</td><td class="num">${cop(T.vpm)}</td><td class="num">${cop(T.log)}</td><td class="num">${cop(T.acum)}</td>
       <td class="num">${T.dN? Math.round(T.dS/T.dN)+' días':'—'}</td></tr>`;
-  body.querySelectorAll('tr[data-c]').forEach(tr=> tr.addEventListener('click', ()=>{ if(!tr.dataset.c.startsWith('(')) setSelect('fCom', tr.dataset.c); }));
-  document.getElementById('comNote').textContent =
-    'Días prom. cancelación: promedio de “Dias para la cancelacion” en sitios con Gestión = Ejecutado, considerando solo valores entre '+(DIAS_MIN+1)+' y '+DIAS_MAX+' días (se descartan valores atípicos que vienen de fechas vacías). Avance Azimut = ejecutados ÷ sitios del grupo Azimut.';
-}
-
-/* ═════════════════════════════════════════════════════════════
-   4. FACTURACIÓN MENSUAL
-   ═════════════════════════════════════════════════════════════ */
-function renderFactura(){
-  document.getElementById('fcN').textContent = CONS.length;
-  const chart = document.getElementById('fcChart'), body = document.getElementById('fcBody');
-  if(!CONS.length){
-    chart.innerHTML = '<div style="width:100%;text-align:center;padding:60px 0;color:var(--text-dim)">No se encontraron columnas “Consolidado &lt;mes&gt; &lt;año&gt;” en la hoja.</div>';
-    body.innerHTML=''; return;
-  }
-  const M = CONS.map((c,j)=>{
-    let az=0, ur=0, pos=0;
-    filtered.forEach(r=>{ const v=r.Cons[j]; if(isAz(r)) az+=v; else ur+=v; if(v>0) pos++; });
-    return {...c, az, ur, tot:az+ur, pos};
-  });
-  const max = Math.max(1, ...M.map(m=>m.tot));
-  const H = 230;
-  chart.innerHTML = M.map(m=>{
-    const ha = Math.max(0, m.az/max*H), hu = Math.max(0, m.ur/max*H);
-    const tip = `<b>${escHtml(m.label)}</b><br>Total: ${cop(m.tot)}<br>Azimut: ${cop(m.az)}<br>Millicom: ${cop(m.ur)}<br>${fmtN(m.pos)} sitios con valor &gt; 0`;
-    return `<div class="cc-col cc-hit" data-tip="${escAttr(tip)}">
-      <div class="cc-stack" style="height:${ha+hu+2}px">
-        <span class="cc-top">${cop(m.tot)}</span>
-        <div class="seg-az" style="height:${ha}px"></div>
-        <div class="seg-ur" style="height:${hu}px"></div>
-      </div>
-      <div class="cc-lbl">${escHtml(m.short)}</div></div>`;
-  }).join('');
-  body.innerHTML = M.map((m,i)=>{
-    let dv = '—';
-    if(i>0 && M[i-1].tot){ const d=(m.tot-M[i-1].tot)/M[i-1].tot*100; dv = `<span class="${d>0?'delta-up':'delta-dn'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(1).replace('.',',')}%</span>`; }
-    return `<tr><td style="text-transform:capitalize">${escHtml(m.label)}</td><td class="num">${cop(m.tot)}</td><td class="num">${cop(m.az)}</td><td class="num">${cop(m.ur)}</td><td class="num">${dv}</td><td class="num">${fmtN(m.pos)}</td></tr>`;
-  }).join('');
-  const f = M[0], l = M[M.length-1];
-  document.getElementById('fcFirstL').textContent = 'Primer mes · '+f.short;
-  document.getElementById('fcLastL').textContent = 'Último mes · '+l.short;
-  document.getElementById('fcFirst').textContent = cop(f.tot);
-  document.getElementById('fcLast').textContent = cop(l.tot);
-  const dv = f.tot ? (l.tot-f.tot)/f.tot*100 : 0;
-  const ve = document.getElementById('fcVar');
-  ve.textContent = (dv>0?'+':'')+dv.toFixed(1).replace('.',',')+'%';
-  ve.style.color = dv>0 ? 'var(--red)' : 'var(--green)';
-  document.getElementById('fcVarS').textContent = (l.tot-f.tot>0?'+':'')+cop(l.tot-f.tot)+' entre '+f.short+' y '+l.short;
-  const zero = filtered.filter(r=> r.Cons[r.Cons.length-1]<=0).length;
-  document.getElementById('fcZero').textContent = fmtN(zero);
-  document.getElementById('fcZeroS').textContent = pct(zero, filtered.length)+' de los sitios filtrados';
+  body.querySelectorAll('tr[data-c]').forEach(tr=> tr.addEventListener('click', ()=>{ if(!tr.dataset.c.startsWith('(')) setSelect(G.sel, tr.dataset.c); }));
+  document.getElementById(G.note).textContent = GRP_NOTE + G.extra;
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -1598,12 +1611,41 @@ function renderEvolucion(){
    6. DETALLE MILLICOM
    ═════════════════════════════════════════════════════════════ */
 function renderMillicom(){
-  const rows = filtered.filter(r=>!isAz(r));
+  /* Mismos sitios que la tarjeta MILLICOM: columna X Responsabilidad = Millicom */
+  const rows = filtered.filter(r=>r.Respons==='MILLICOM');
   document.getElementById('mCnt').textContent = fmtN(rows.length);
   const tmp = document.createElement('table');
-  pivot(tmp, rows, 'UniRed', 'Estado', 'n', UR_ORDER);
+  pivot(tmp, rows, 'UniRed', 'Categoria', 'n', UR_ORDER);
   document.getElementById('mThead').innerHTML = tmp.tHead ? tmp.tHead.innerHTML : '';
   document.getElementById('mB').innerHTML = tmp.tBodies[0] ? tmp.tBodies[0].innerHTML : '';
+}
+
+/* ═════════════════════════════════════════════════════════════
+   DETALLE AZIMUT: tarjetas por Acción (Responsabilidad = Azimut) y,
+   al seleccionar una, tabla dinámica Estado Azimut × Categoría
+   ═════════════════════════════════════════════════════════════ */
+let azSel = '';   /* '' = todas las acciones */
+function renderAzimut(){
+  const rows = filtered.filter(r=>r.Respons==='AZIMUT');
+  document.getElementById('azCnt').textContent = fmtN(rows.length);
+  const m = {};
+  rows.forEach(r=>{ const k = r.UniRed||'(sin dato)'; (m[k] = m[k] || {k, n:0, v:0}); m[k].n++; m[k].v += r.VPM; });
+  const arr = Object.values(m).sort((a,b)=> b.n-a.n);
+  if(azSel && !m[azSel]) azSel = '';
+  const vTot = rows.reduce((s,r)=>s+r.VPM,0);
+  const card = (k,lbl,n,v)=> `<button type="button" class="acc-card ${azSel===k?'on':''}" data-k="${escAttr(k)}">
+      <div class="ac-l">${escHtml(lbl)}</div><div class="ac-n">${fmtN(n)}</div>
+      <div class="ac-s">${pct(n,rows.length)} · VPM ${cop(v)}</div></button>`;
+  const grid = document.getElementById('azAccGrid');
+  grid.innerHTML = card('', 'Todas', rows.length, vTot) + arr.map(o=> card(o.k, o.k, o.n, o.v)).join('');
+  grid.querySelectorAll('.acc-card').forEach(b=> b.addEventListener('click', ()=>{ azSel = b.dataset.k; renderAzimut(); }));
+  const sel = azSel ? rows.filter(r=> (r.UniRed||'(sin dato)')===azSel) : rows;
+  document.getElementById('azSelLbl').textContent = azSel || 'Todas';
+  document.getElementById('azSelCnt').textContent = fmtN(sel.length);
+  const tmp = document.createElement('table');
+  pivot(tmp, sel, 'Estado', 'Categoria', 'n');
+  document.getElementById('azThead').innerHTML = tmp.tHead ? tmp.tHead.innerHTML : '';
+  document.getElementById('azB').innerHTML = tmp.tBodies[0] ? tmp.tBodies[0].innerHTML : '';
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -1622,7 +1664,7 @@ const DET_COLS = [
 ];
 function buildDetailHead(){
   const th = document.getElementById('tH');
-  th.innerHTML = '<tr>'+DET_COLS.map(c=>`<th class="sort ${c.num?'num':''}" data-k="${c.k}">${c.t}<span class="arr">↕</span></th>`).join('')+'</tr>';
+  th.innerHTML = '<tr>'+DET_COLS.map(c=>`<th class="sort ${c.num?'num':''}" data-k="${c.k}">${c.k==='UniRed'?UR_LBL:c.t}<span class="arr">↕</span></th>`).join('')+'</tr>';
   th.querySelectorAll('th').forEach(h=> h.addEventListener('click', ()=>{
     const k = h.dataset.k;
     sortDir = sortKey===k ? -sortDir : 1; sortKey = k;
@@ -1690,7 +1732,7 @@ function renderPag(){
 /* ── Ficha completa del sitio (todas las columnas de la hoja) ── */
 const SECCIONES = [
   ['Identificación', ['Operador','Pair Site (Offgrid) Emplazamiento','NIC','Nombre del Sitio','Nombre soporte','Comercializador','Titular','Región','Responsable de la cuenta','medidor']],
-  ['Estado y gestión Azimut', ['Responsabilidad','UniRed','Estado Azimut','Categoria','Gestión','Gestión Actas','Comentario','comentario2','Radicado','Inicio de Gestion','Fecha de Gestión','Fecha Solicitud','Fecha de solicitud','Fecha de recepcion','Dias para la cancelacion','Tiempos de atencion','Seguimiento','Fecha unired']],
+  ['Estado y gestión Azimut', ['Responsabilidad','Accion','UniRed','Estado Azimut','Categoria','Gestión','Gestión Actas','Comentario','comentario2','Radicado','Inicio de Gestion','Fecha de Gestión','Fecha Solicitud','Fecha de solicitud','Fecha de recepcion','Dias para la cancelacion','Tiempos de atencion','Seguimiento','Fecha unired']],
   ['Desmonte y red', ['RAN','Fecha OFF RAN','TX','Fecha OFF TX','TOWER CO','AUTORIZADO DESMONTE','MNO SE QUEDA CON MW EN SITIO','AUTORIZACION CANCELACION CUENTA ENERGIA|PLANEACION','AUTORIZACION CANCELACION CUENTA ENERGIA|AREA CONTRATOS','SITIO DESMONTADO, CON ACTA DE ENTREGA','sin demsonte','Año estimado desmonte','Mes Estimado Desmonte','Fecha Propuesta Apagado','Priorización Sitios','SITIOS CON BARTER','GRID RED ÚNICA V6_4_6','GRID RED ÚNICA V6_4_7','Estado Haydiver','estado tigo','sitios GOLDEN','Ceder ATC']],
   ['Valores', ['Valor promedio mensual','Energía','Alumbrado Público','Valor No cedido','Calculo Mes','Meses con ahorro','Valor Ahorro Acumulado','valor ultimo mes TIGO']]
 ];
@@ -1767,7 +1809,7 @@ document.getElementById('btnReload').addEventListener('click', ()=>{
 
 document.getElementById('btnXlsx').addEventListener('click', ()=>{
   if(PREVIEW){ toast('En la vista previa las descargas están bloqueadas. En la versión publicada en GitHub/Render este botón descarga el Excel filtrado.'); return; }
-  const aoa = [HEADERS].concat(sortedRows().map(r=> HEADERS.map((h,i)=> r.raw[i]==null ? '' : r.raw[i])));
+  const aoa = [HEADERS.concat(['Comercializador unificado'])].concat(sortedRows().map(r=> HEADERS.map((h,i)=> r.raw[i]==null ? '' : r.raw[i]).concat([r.Comercializador||''])));
   const ws = XLSX.utils.aoa_to_sheet(aoa, {cellDates:true});
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Filtrado');
